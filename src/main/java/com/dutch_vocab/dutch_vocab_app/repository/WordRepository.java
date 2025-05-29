@@ -1,12 +1,16 @@
 package com.dutch_vocab.dutch_vocab_app.repository;
 
 import com.dutch_vocab.dutch_vocab_app.model.Word;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
 import java.util.List;
 
-public interface WordRepository extends JpaRepository<Word, Long> {
+public interface WordRepository extends MongoRepository<Word, Long> {
+    List<Word> findByDutchWord(String dutchWord);
+
+//    List<Word> findByDifficulty(int difficulty);
+
     List<Word> findAllByOrderByLastReviewedAsc();
 
-    // 可选: 按难度级别查找
-    List<Word> findByDifficultyLevelOrderByLastReviewedAsc(int difficultyLevel);
+    boolean existsByDutchWord(String dutchWord);
 }
