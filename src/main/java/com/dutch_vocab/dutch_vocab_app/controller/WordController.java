@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -35,18 +34,18 @@ public class WordController {
         return wordService.findAllByOrderByLastReviewedAsc();
     }
 
-    // 标记单词为已复习
-    @PutMapping("/{id}/review")
-    public Word markAsReviewed(@PathVariable Long id) {
-        Word word = wordService.getWordById(id.toString());
-        word.setLastReviewed(new Date());
-        word.setReviewCount(word.getReviewCount() + 1);
-        return wordService.addWord(word);
-    }
+//    // 标记单词为已复习
+//    @PutMapping("/{id}/review")
+//    public Word markAsReviewed(@PathVariable Long id) {
+//        Word word = wordService.getWordById(id.toString());
+//        word.setLastReviewed(new Date());
+//        word.setReviewCount(word.getReviewCount() + 1);
+//        return wordService.addWord(word);
+//    }
 
     // Delete Word
-    @DeleteMapping("/{id}")
-    public void deleteWord(@PathVariable Long id) {
-        wordService.deleteWord(String.valueOf(id));
-    }
+//    @DeleteMapping("/{id}")
+//    public void deleteWord(@PathVariable Long id) {
+//        wordService.deleteWord(String.valueOf(id));
+//    }
 }

@@ -34,13 +34,13 @@ public class WordService {
         return wordRepository.findAll();
     }
 
-    public Word getWordById(String id) {
-        return wordRepository.findById(Long.valueOf(id)).orElse(null);
-    }
-
-    public void deleteWord(String id) {
-        wordRepository.deleteById(Long.valueOf(id));
-    }
+//    public Word getWordById(String id) {
+//        return wordRepository.findById(Long.valueOf(id)).orElse(null);
+//    }
+//
+//    public void deleteWord(String id) {
+//        wordRepository.deleteById(Long.valueOf(id));
+//    }
 
     public List<Word> findAllByOrderByLastReviewedAsc() {
         return wordRepository.findAllByOrderByLastReviewedAsc();
