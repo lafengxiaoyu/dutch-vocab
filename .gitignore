@@ -1,8 +1,8 @@
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+!dutch-vocab-frondend/js/main/**/target/
+!dutch-vocab-frondend/js/test/**/target/
 
 ### STS ###
 .apt_generated
@@ -26,8 +26,8 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+!dutch-vocab-frondend/js/main/**/build/
+!dutch-vocab-frondend/js/test/**/build/
 
 ### VS Code ###
 .vscode/

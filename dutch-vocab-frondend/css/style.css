@@ -1,0 +1,134 @@
+/* 基础样式 */
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+/* 表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    flex-grow: 1;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* 加载和错误状态 */
+.loading {
+    text-align: center;
+    margin: 20px;
+    font-style: italic;
+    color: #7f8c8d;
+}
+
+.error {
+    color: #e74c3c;
+    text-align: center;
+    margin: 20px;
+    padding: 10px;
+    background-color: #fdecea;
+    border-radius: 4px;
+}
+
+/* 控制按钮 */
+.controls {
+    margin: 20px 0;
+    text-align: center;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+.submit-btn {
+    background-color: #2ecc71;
+}
+
+.submit-btn:hover {
+    background-color: #27ae60;
+}
+
+/* 表单样式 - 固定在底部 */
+.add-word-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: auto; /* 将表单推到底部 */
+    border-top: 2px solid #3498db;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.success-message {
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+}
+
+/* 操作列样式 */
+td:last-child {
+    text-align: center;
+    min-width: 80px;
+}
