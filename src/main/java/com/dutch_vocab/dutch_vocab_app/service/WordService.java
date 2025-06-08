@@ -5,6 +5,7 @@ import com.dutch_vocab.dutch_vocab_app.model.Word;
 import com.dutch_vocab.dutch_vocab_app.repository.WordRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -34,17 +35,40 @@ public class WordService {
         return wordRepository.findAll();
     }
 
-//    public Word getWordById(String id) {
-//        return wordRepository.findById(Long.valueOf(id)).orElse(null);
-//    }
-//
-//    public void deleteWord(String id) {
-//        wordRepository.deleteById(Long.valueOf(id));
-//    }
+    public Word getWordById(String id) {
+        var objectId = getObjectId(id);
+        return wordRepository.findById(objectId).orElse(null);
+    }
+
+
+    public void deleteWord(String id) {
+        try {
+            var objectId = getObjectId(id);
+            if (!wordRepository.existsById(objectId)) {
+                throw new RuntimeException("Not existence");
+            }
+            wordRepository.deleteById(objectId);
+            log.info("Deletion succeed: {}", objectId);
+        }
+        catch (Exception exception) {
+            throw new RuntimeException("Something goes wrong with deletion");
+        }
+    }
 
     public List<Word> findAllByOrderByLastReviewedAsc() {
         return wordRepository.findAllByOrderByLastReviewedAsc();
     }
 
-    // other methods
+    public ObjectId getObjectId(String id) {
+        // 1. Validate ID format
+        if (!ObjectId.isValid(id)) {
+            log.warn("Invalid Object Id format: {}", id);
+        }
+        return new ObjectId(id);
+    }
+
+    public void updateWord(Word word) {
+        wordRepository.save(word);
+    }
+
 }

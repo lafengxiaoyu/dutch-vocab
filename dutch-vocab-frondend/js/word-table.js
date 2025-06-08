@@ -31,8 +31,8 @@ export const renderWordsTable = (words) => {
         const row = document.createElement('tr');
 
         row.innerHTML = `
-            <td>${word.dutchWord || ''}</td>
-            <td>${word.englishTranslation || ''}</td>
+            <td><a href="word-detail.html?id=${word._id}" class="word-link">${word.dutchWord || ''}</a></td>
+            <td><a href="word-detail.html?id=${word._id}" class="word-link">${word.englishTranslation || ''}</a></td>
             <td>${formatDate(word.dateAdded)}</td>
             <td>${formatDate(word.lastReviewed)}</td>
             <td>${word.reviewCount || 0}</td>
