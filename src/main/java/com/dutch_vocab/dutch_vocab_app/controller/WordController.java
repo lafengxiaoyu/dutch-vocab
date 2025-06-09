@@ -17,6 +17,11 @@ import java.util.List;
 public class WordController {
     private final WordService wordService;
 
+    @GetMapping("/{id}")
+    public Word getWord(@PathVariable String id) {
+        return wordService.getWordById(id);
+    }
+
     // add new word
     @PostMapping
     public Word addWord(@RequestBody Word word) {
@@ -47,7 +52,7 @@ public class WordController {
 
     // Delete Word
     @DeleteMapping("/{id}")
-    public void deleteWord(@PathVariable Long id) {
-        wordService.deleteWord(String.valueOf(id));
+    public void deleteWord(@PathVariable String id) {
+        wordService.deleteWord(id);
     }
 }

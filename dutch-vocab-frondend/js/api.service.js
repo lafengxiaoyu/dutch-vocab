@@ -57,3 +57,16 @@ export const deleteWord = async (id) => {
 
     return response.status === 204;
 };
+
+// 更新单词复习信息
+export const updateWordReviewInfo = async (id) => {
+    const response = await fetch(`${API_URL}/${id}/review`, {
+        method: 'PUT'
+    });
+
+    if (!response.ok) {
+        throw new Error(`更新复习信息失败! 状态码: ${response.status}`);
+    }
+
+    return response.json();
+};

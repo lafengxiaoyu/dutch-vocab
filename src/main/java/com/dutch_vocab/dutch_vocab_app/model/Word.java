@@ -12,6 +12,10 @@ public class Word {
     @Id
     private ObjectId id;
 
+    public String getId() {
+        return id != null ? id.toString() : null;
+    }
+
     private String dutchWord;
     private String englishTranslation;
     private Date dateAdded = new Date();

@@ -23,16 +23,16 @@ export const renderWordsTable = (words) => {
     wordsBody.innerHTML = '';
 
     if (words.length === 0) {
-        wordsBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">没有找到单词</td></tr>';
+        wordsBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">没有找到单词</td></tr>';
         return;
     }
 
     words.forEach(word => {
+        console.log('Word object:', word); // 添加调试日志
         const row = document.createElement('tr');
-
         row.innerHTML = `
-            <td><a href="word-detail.html?id=${word._id}" class="word-link">${word.dutchWord || ''}</a></td>
-            <td><a href="word-detail.html?id=${word._id}" class="word-link">${word.englishTranslation || ''}</a></td>
+            <td><a href="word-detail.html?id=${word.id}" class="word-link">${word.dutchWord || ''}</a></td>
+            <td><a href="word-detail.html?id=${word.id}" class="word-link">${word.englishTranslation || ''}</a></td>
             <td>${formatDate(word.dateAdded)}</td>
             <td>${formatDate(word.lastReviewed)}</td>
             <td>${word.reviewCount || 0}</td>
