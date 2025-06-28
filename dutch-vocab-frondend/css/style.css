@@ -18,6 +18,7 @@ h1, h2 {
 /* 表格样式 */
 table {
     width: 100%;
+    table-layout: fixed; /* 确保列宽固定 */
     border-collapse: collapse;
     margin: 20px 0;
     flex-grow: 1;
@@ -27,7 +28,18 @@ th, td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
+/* 设置各列宽度 */
+#wordsTable th:nth-child(1), #wordsTable td:nth-child(1) { width: 20%; } /* 荷兰语 */
+#wordsTable th:nth-child(2), #wordsTable td:nth-child(2) { width: 20%; } /* 英语翻译 */
+#wordsTable th:nth-child(3), #wordsTable td:nth-child(3) { width: 15%; } /* 添加日期 */
+#wordsTable th:nth-child(4), #wordsTable td:nth-child(4) { width: 15%; } /* 最后复习 */
+#wordsTable th:nth-child(5), #wordsTable td:nth-child(5) { width: 10%; } /* 复习次数 */
+#wordsTable th:nth-child(6), #wordsTable td:nth-child(6) { width: 10%; } /* 操作 */
 
 th {
     background-color: #3498db;
@@ -199,6 +211,53 @@ textarea {
     background-color: #fdecea;
     border-radius: 4px;
     display: none;
+}
+
+/* 分页控制样式 */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.page-size-selector {
+    display: flex;
+    align-items: center;
+}
+
+.page-size-selector select {
+    margin-left: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#pageInfo {
+    margin: 0 10px;
 }
 
 /* 单词详情页面样式 */

@@ -5,6 +5,17 @@ import { formatDate } from './utils.js';
 const wordsBody = document.getElementById('wordsBody');
 const loadingDiv = document.getElementById('loading');
 const errorDiv = document.getElementById('error');
+const pageSizeSelect = document.getElementById('pageSize');
+const prevPageBtn = document.getElementById('prevPage');
+const nextPageBtn = document.getElementById('nextPage');
+const currentPageSpan = document.getElementById('currentPage');
+const totalPagesSpan = document.getElementById('totalPages');
+
+// 分页状态
+let currentPage = 1;
+let pageSize = parseInt(pageSizeSelect.value);
+let totalWords = 0;
+let allWords = [];
 
 // 显示或隐藏加载状态
 export const setLoading = (isLoading) => {
@@ -18,7 +29,29 @@ export const showError = (message) => {
     errorDiv.textContent = message;
 };
 
-// 渲染单词表格（已移除ID列）
+// 计算总页数
+const calculateTotalPages = () => {
+    return Math.ceil(totalWords / pageSize);
+};
+
+// 更新分页控件状态
+const updatePaginationControls = () => {
+    const totalPages = calculateTotalPages();
+    currentPageSpan.textContent = currentPage;
+    totalPagesSpan.textContent = totalPages;
+    
+    prevPageBtn.disabled = currentPage <= 1;
+    nextPageBtn.disabled = currentPage >= totalPages;
+};
+
+// 获取当前页的单词
+const getCurrentPageWords = () => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return allWords.slice(startIndex, endIndex);
+};
+
+// 渲染单词表格
 export const renderWordsTable = (words) => {
     wordsBody.innerHTML = '';
 
@@ -28,14 +61,13 @@ export const renderWordsTable = (words) => {
     }
 
     words.forEach(word => {
-        console.log('Word object:', word); // 添加调试日志
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td><a href="word-detail.html?id=${word.id}" class="word-link">${word.dutchWord || ''}</a></td>
-            <td><a href="word-detail.html?id=${word.id}" class="word-link">${word.englishTranslation || ''}</a></td>
-            <td>${formatDate(word.dateAdded)}</td>
-            <td>${formatDate(word.lastReviewed)}</td>
-            <td>${word.reviewCount || 0}</td>
+            <td title="${word.dutchWord || ''}"><a href="word-detail.html?id=${word.id}" class="word-link">${word.dutchWord || ''}</a></td>
+            <td title="${word.englishTranslation || ''}"><a href="word-detail.html?id=${word.id}" class="word-link">${word.englishTranslation || ''}</a></td>
+            <td title="${formatDate(word.dateAdded)}">${formatDate(word.dateAdded)}</td>
+            <td title="${formatDate(word.lastReviewed)}">${formatDate(word.lastReviewed)}</td>
+            <td title="${word.reviewCount || 0}">${word.reviewCount || 0}</td>
             <td><button class="delete-btn" data-id="${word.id}">删除</button></td>
         `;
 
@@ -61,11 +93,48 @@ export const renderWordsTable = (words) => {
 export const fetchAndDisplayWords = async () => {
     try {
         setLoading(true);
-        const words = await getWords();
-        renderWordsTable(words);
+        allWords = await getWords();
+        totalWords = allWords.length;
+        
+        // 确保当前页在有效范围内
+        const totalPages = calculateTotalPages();
+        if (currentPage > totalPages) {
+            currentPage = totalPages || 1;
+        }
+        
+        updatePaginationControls();
+        renderWordsTable(getCurrentPageWords());
     } catch (error) {
         showError(`加载失败: ${error.message}`);
     } finally {
         setLoading(false);
     }
+};
+
+// 初始化分页事件监听器
+export const initializePagination = () => {
+    // 页面大小改变事件
+    pageSizeSelect.addEventListener('change', () => {
+        pageSize = parseInt(pageSizeSelect.value);
+        currentPage = 1; // 重置到第一页
+        fetchAndDisplayWords();
+    });
+
+    // 上一页按钮点击事件
+    prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderWordsTable(getCurrentPageWords());
+            updatePaginationControls();
+        }
+    });
+
+    // 下一页按钮点击事件
+    nextPageBtn.addEventListener('click', () => {
+        if (currentPage < calculateTotalPages()) {
+            currentPage++;
+            renderWordsTable(getCurrentPageWords());
+            updatePaginationControls();
+        }
+    });
 };
