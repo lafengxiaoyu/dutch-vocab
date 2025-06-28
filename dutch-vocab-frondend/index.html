@@ -11,6 +11,31 @@
 
 <div class="controls">
     <button id="refreshBtn">刷新数据</button>
+    <button id="bulkAddBtn">批量添加</button>
+</div>
+
+<!-- 批量添加模态框 -->
+<div id="bulkAddModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>批量添加单词</h2>
+        <div class="form-group">
+            <label for="bulkWordsInput">输入JSON格式的单词数据:</label>
+            <textarea id="bulkWordsInput" rows="10" placeholder='[
+    {
+        "dutchWord": "huis",
+        "englishTranslation": "house",
+        "chineseTranslation": "房子",
+        "example": "Dit is mijn huis."
+    }
+]'></textarea>
+        </div>
+        <div class="controls">
+            <button id="submitBulkBtn" class="submit-btn">提交</button>
+        </div>
+        <div id="bulkSuccessMessage" class="success-message"></div>
+        <div id="bulkErrorMessage" class="error-message"></div>
+    </div>
 </div>
 
 <div id="loading" class="loading">正在加载数据...</div>

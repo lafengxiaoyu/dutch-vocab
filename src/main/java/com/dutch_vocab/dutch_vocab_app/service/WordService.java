@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -72,4 +73,35 @@ public class WordService {
         return wordRepository.save(word);
     }
 
+    /**
+     * 批量添加单词
+     * @param words 要添加的单词列表
+     * @return 成功添加的单词列表
+     */
+    public List<Word> addWordsBulk(List<Word> words) {
+        var addedWords = new ArrayList<Word>();
+        var currentDate = new Date();
+        
+        for (var word : words) {
+            try {
+                // 检查单词是否已存在
+                if (wordRepository.existsByDutchWord(word.getDutchWord())) {
+                    log.warn("Word {} already exists, skipping", word.getDutchWord());
+                    continue;
+                }
+                
+                // set date
+                word.setDateAdded(currentDate);
+                wordRepository.save(word);
+                addedWords.add(word);
+                log.info("Word: {} is saved to database.", word.getDutchWord());
+            } catch (Exception e) {
+                log.error("Error adding word {}: {}", word.getDutchWord(), e.getMessage());
+            }
+        }
+        
+        log.info("Bulk add completed: {} out of {} words added successfully", 
+                addedWords.size(), words.size());
+        return addedWords;
+    }
 }

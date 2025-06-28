@@ -70,3 +70,20 @@ export const updateWordReviewInfo = async (id) => {
 
     return response.json();
 };
+
+// 批量添加单词
+export const addWordsBulk = async (wordsData) => {
+    const response = await fetch(`${API_URL}/bulk`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ words: wordsData }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`批量添加失败! 状态码: ${response.status}`);
+    }
+
+    return response.json();
+};

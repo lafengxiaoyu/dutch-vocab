@@ -3,6 +3,7 @@ package com.dutch_vocab.dutch_vocab_app.controller;
 import com.dutch_vocab.dutch_vocab_app.model.Word;
 import com.dutch_vocab.dutch_vocab_app.service.WordService;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,5 +56,24 @@ public class WordController {
     @DeleteMapping("/{id}")
     public void deleteWord(@PathVariable String id) {
         wordService.deleteWord(id);
+    }
+
+    /**
+     * 批量添加单词的请求体
+     */
+    @Data
+    public static class BulkAddRequest {
+        private List<Word> words;
+    }
+
+    /**
+     * 批量添加单词
+     * @param request 包含多个单词的请求体
+     * @return 添加成功的单词列表
+     */
+    @PostMapping("/bulk")
+    public List<Word> addWordsBulk(@RequestBody BulkAddRequest request) {
+        log.info("Received request to add {} words in bulk", request.getWords().size());
+        return wordService.addWordsBulk(request.getWords());
     }
 }
