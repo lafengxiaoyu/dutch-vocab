@@ -47,8 +47,9 @@ public class WordService {
             if (!wordRepository.existsById(objectId)) {
                 throw new RuntimeException("Not existence");
             }
+            var word = wordRepository.findById(objectId);
             wordRepository.deleteById(objectId);
-            log.info("Deletion succeed: {}", objectId);
+            log.info("Deletion succeed: {}", word.map(Word::getDutchWord));
         }
         catch (Exception exception) {
             throw new RuntimeException("Something goes wrong with deletion");
@@ -67,8 +68,8 @@ public class WordService {
         return new ObjectId(id);
     }
 
-    public void updateWord(Word word) {
-        wordRepository.save(word);
+    public Word updateWord(Word word) {
+        return wordRepository.save(word);
     }
 
 }

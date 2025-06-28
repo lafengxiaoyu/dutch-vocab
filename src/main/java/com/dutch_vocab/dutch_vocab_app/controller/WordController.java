@@ -41,13 +41,14 @@ public class WordController {
     }
 
     // 标记单词为已复习
-    @GetMapping("/{id}/review")
-    public void markAsReviewed(@PathVariable String id) {
+    @PutMapping("/{id}/review")
+    public Word markAsReviewed(@PathVariable String id) {
         var word = wordService.getWordById(id);
         word.setLastReviewed(new Date());
         word.setReviewCount(word.getReviewCount() + 1);
-        wordService.updateWord(word);
-        log.info("Just reviewed the word: {}", word);
+        Word updatedWord = wordService.updateWord(word);
+        log.info("Just reviewed the word: {}", updatedWord);
+        return updatedWord;
     }
 
     // Delete Word
