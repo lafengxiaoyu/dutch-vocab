@@ -86,22 +86,17 @@ public class WordController {
     
     /**
      * 获取一个随机单词
-     * @param difficultyLevel 可选的难度级别 (1-5)
-     * @param excludeRecentlyReviewed 是否排除最近复习过的单词
      * @return 随机单词
      */
     @GetMapping("/random")
-    public ResponseEntity<?> getRandomWord(
-            @RequestParam(required = false) String difficultyLevel,
-            @RequestParam(required = false, defaultValue = "false") boolean excludeRecentlyReviewed) {
-        log.info("Getting a random word with difficultyLevel: {}, excludeRecentlyReviewed: {}", 
-                difficultyLevel, excludeRecentlyReviewed);
+    public ResponseEntity<?> getRandomWord() {
+        log.info("Getting a random word");
         try {
-            Word word = wordService.getRandomWord(difficultyLevel, excludeRecentlyReviewed);
+            Word word = wordService.getRandomWord();
             return ResponseEntity.ok(word);
         } catch (NoWordsAvailableException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "No words available matching the selected criteria"));
+                    .body(Map.of("message", "No words available in the database"));
         }
     }
 }

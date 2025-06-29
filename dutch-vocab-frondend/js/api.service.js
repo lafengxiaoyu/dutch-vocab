@@ -140,15 +140,12 @@ export const addWordsBulk = async (wordsData) => {
 };
 
 // 获取随机单词
-export const getRandomWord = async (difficultyLevel = null, excludeRecentlyReviewed = false) => {
+export const getRandomWord = async (difficultyLevel = null) => {
     try {
         // 构建查询参数
         const params = new URLSearchParams();
         if (difficultyLevel) {
             params.append('difficultyLevel', difficultyLevel);
-        }
-        if (excludeRecentlyReviewed) {
-            params.append('excludeRecentlyReviewed', 'true');
         }
 
         const url = `${API_URL}/random${params.toString() ? `?${params.toString()}` : ''}`;
