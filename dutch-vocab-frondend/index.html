@@ -12,6 +12,43 @@
 <div class="controls">
     <button id="refreshBtn">刷新数据</button>
     <button id="bulkAddBtn">批量添加</button>
+    <button id="randomWordBtn">随机单词</button>
+</div>
+
+<!-- 随机单词模态框 -->
+<div id="randomWordModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>随机单词</h2>
+        <div class="filter-controls">
+            <div class="form-group">
+                <label for="difficultyLevel">难度级别:</label>
+                <select id="difficultyLevel">
+                    <option value="">全部</option>
+                    <option value="1">1 - 简单</option>
+                    <option value="2">2 - 基础</option>
+                    <option value="3">3 - 中等</option>
+                    <option value="4">4 - 困难</option>
+                    <option value="5">5 - 专家</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="excludeRecentlyReviewed">
+                    排除最近复习过的单词
+                </label>
+            </div>
+        </div>
+        <div class="word-detail">
+            <p><strong>荷兰语:</strong> <span id="randomDutchWord"></span></p>
+            <p><strong>英语翻译:</strong> <span id="randomEnglishTranslation"></span></p>
+            <p><strong>中文翻译:</strong> <span id="randomChineseTranslation"></span></p>
+            <p><strong>例句:</strong> <span id="randomExample"></span></p>
+        </div>
+        <div class="controls">
+            <button id="nextRandomWordBtn">下一个</button>
+        </div>
+    </div>
 </div>
 
 <!-- 批量添加模态框 -->

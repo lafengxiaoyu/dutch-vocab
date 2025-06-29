@@ -21,19 +21,34 @@ export const getWords = async () => {
  
 // add new word
 export const addWord = async (wordData) => {
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(wordData),
-    });
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(wordData),
+        });
 
-    if (!response.ok) {
-        throw new Error(`添加失败! 状态码: ${response.status}`);
+        if (!response.ok) {
+            // 尝试解析错误响应
+            let errorMessage = `添加失败! 状态码: ${response.status}`;
+            try {
+                const errorData = await response.json();
+                if (errorData.message) {
+                    errorMessage = errorData.message;
+                }
+            } catch (e) {
+                console.error('无法解析错误响应:', e);
+            }
+            throw new Error(errorMessage);
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error('Add word error:', error);
+        throw error;
     }
-
-    return response.json();
 };
 
 // 获取单个单词详情
@@ -122,4 +137,39 @@ export const addWordsBulk = async (wordsData) => {
     }
 
     return response.json();
+};
+
+// 获取随机单词
+export const getRandomWord = async (difficultyLevel = null, excludeRecentlyReviewed = false) => {
+    try {
+        // 构建查询参数
+        const params = new URLSearchParams();
+        if (difficultyLevel) {
+            params.append('difficultyLevel', difficultyLevel);
+        }
+        if (excludeRecentlyReviewed) {
+            params.append('excludeRecentlyReviewed', 'true');
+        }
+
+        const url = `${API_URL}/random${params.toString() ? `?${params.toString()}` : ''}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            // 尝试解析错误响应
+            let errorMessage = `获取随机单词失败! 状态码: ${response.status}`;
+            try {
+                const errorData = await response.json();
+                if (errorData.message) {
+                    errorMessage = errorData.message;
+                }
+            } catch (e) {
+                console.error('无法解析错误响应:', e);
+            }
+            throw new Error(errorMessage);
+        }
+        return response.json();
+    } catch (error) {
+        console.error('Get random word error:', error);
+        throw error;
+    }
 };

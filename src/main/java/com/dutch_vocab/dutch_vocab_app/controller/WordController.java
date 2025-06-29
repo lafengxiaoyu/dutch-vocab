@@ -1,14 +1,17 @@
 package com.dutch_vocab.dutch_vocab_app.controller;
 
+import com.dutch_vocab.dutch_vocab_app.exception.NoWordsAvailableException;
 import com.dutch_vocab.dutch_vocab_app.model.Word;
 import com.dutch_vocab.dutch_vocab_app.service.WordService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -79,5 +82,26 @@ public class WordController {
     public List<Word> addWordsBulk(@RequestBody BulkAddRequest request) {
         log.info("Received request to add {} words in bulk", request.getWords().size());
         return wordService.addWordsBulk(request.getWords());
+    }
+    
+    /**
+     * 获取一个随机单词
+     * @param difficultyLevel 可选的难度级别 (1-5)
+     * @param excludeRecentlyReviewed 是否排除最近复习过的单词
+     * @return 随机单词
+     */
+    @GetMapping("/random")
+    public ResponseEntity<?> getRandomWord(
+            @RequestParam(required = false) String difficultyLevel,
+            @RequestParam(required = false, defaultValue = "false") boolean excludeRecentlyReviewed) {
+        log.info("Getting a random word with difficultyLevel: {}, excludeRecentlyReviewed: {}", 
+                difficultyLevel, excludeRecentlyReviewed);
+        try {
+            Word word = wordService.getRandomWord(difficultyLevel, excludeRecentlyReviewed);
+            return ResponseEntity.ok(word);
+        } catch (NoWordsAvailableException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "No words available matching the selected criteria"));
+        }
     }
 }
