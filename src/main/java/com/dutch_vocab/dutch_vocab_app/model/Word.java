@@ -20,9 +20,9 @@ public class Word {
     private String englishTranslation;
     private Date dateAdded = new Date();
     private Date lastReviewed;
-    private int reviewCount = 0;
+    private Integer reviewCount = 0;
     // optional fields
     private String partOfSpeech; // 词性: noun, verb, adjective etc.
     private String exampleSentence; // example
-    private int difficultyLevel = 1; // difficulty level 1-5
+    private Integer difficultyLevel = 1; // difficulty level 1-5
 }

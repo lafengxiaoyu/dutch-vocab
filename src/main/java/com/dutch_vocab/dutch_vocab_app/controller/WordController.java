@@ -44,18 +44,22 @@ public class WordController {
     // 标记单词为已复习
     @PutMapping("/{id}/review")
     public Word markAsReviewed(@PathVariable String id) {
-        var word = wordService.getWordById(id);
-        word.setLastReviewed(new Date());
-        word.setReviewCount(word.getReviewCount() + 1);
-        Word updatedWord = wordService.updateWord(word);
-        log.info("Just reviewed the word: {}", updatedWord);
-        return updatedWord;
+        Word result = wordService.markWordAsReviewed(id);
+        log.info("Just reviewed the word: {}", result);
+        return result;
     }
 
     // Delete Word
     @DeleteMapping("/{id}")
     public void deleteWord(@PathVariable String id) {
         wordService.deleteWord(id);
+    }
+    
+    // Update Word
+    @PutMapping("/{id}")
+    public Word updateWord(@PathVariable String id, @RequestBody Word word) {
+        log.info("Updating word with id: {}", id);
+        return wordService.updateWord(id, word);
     }
 
     /**

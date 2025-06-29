@@ -71,6 +71,42 @@ export const updateWordReviewInfo = async (id) => {
     return response.json();
 };
 
+// 更新单词信息
+export const updateWord = async (id, wordData) => {
+    try {
+        console.log('Updating word:', id, 'with data:', wordData);
+        
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(wordData),
+        });
+
+        if (!response.ok) {
+            // 尝试解析错误响应
+            let errorMessage = `更新单词失败! 状态码: ${response.status}`;
+            try {
+                const errorData = await response.json();
+                if (errorData.message) {
+                    errorMessage = errorData.message;
+                }
+            } catch (e) {
+                console.error('无法解析错误响应:', e);
+            }
+            throw new Error(errorMessage);
+        }
+
+        const updatedWord = await response.json();
+        console.log('Word updated successfully:', updatedWord);
+        return updatedWord;
+    } catch (error) {
+        console.error('Update word error:', error);
+        throw error;
+    }
+};
+
 // 批量添加单词
 export const addWordsBulk = async (wordsData) => {
     const response = await fetch(`${API_URL}/bulk`, {

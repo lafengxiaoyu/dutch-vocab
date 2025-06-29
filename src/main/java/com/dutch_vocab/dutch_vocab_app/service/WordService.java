@@ -68,9 +68,39 @@ public class WordService {
         }
         return new ObjectId(id);
     }
-
-    public Word updateWord(Word word) {
-        return wordRepository.save(word);
+    
+    public Word updateWord(String id, Word updatedWord) {
+        var objectId = getObjectId(id);
+        var existingWord = wordRepository.findById(objectId)
+            .orElseThrow(() -> new RuntimeException("Word not found with id: " + id));
+        
+        // 保护系统管理的字段，只允许更新用户可编辑的字段
+        existingWord.setDutchWord(updatedWord.getDutchWord());
+        existingWord.setEnglishTranslation(updatedWord.getEnglishTranslation());
+        existingWord.setPartOfSpeech(updatedWord.getPartOfSpeech());
+        existingWord.setExampleSentence(updatedWord.getExampleSentence());
+        existingWord.setDifficultyLevel(updatedWord.getDifficultyLevel());
+        
+        log.info("Word {} is Updated by: {}", existingWord, updatedWord);
+        return wordRepository.save(existingWord);
+    }
+    
+    /**
+     * 标记单词为已复习，更新lastReviewed和reviewCount字段
+     * @param id 单词ID
+     * @return 更新后的单词
+     */
+    public Word markWordAsReviewed(String id) {
+        var objectId = getObjectId(id);
+        var existingWord = wordRepository.findById(objectId)
+            .orElseThrow(() -> new RuntimeException("Word not found with id: " + id));
+        
+        // 更新复习相关字段
+        existingWord.setLastReviewed(new Date());
+        existingWord.setReviewCount(existingWord.getReviewCount() + 1);
+        
+        log.info("Word marked as reviewed: {}", existingWord);
+        return wordRepository.save(existingWord);
     }
 
     /**
