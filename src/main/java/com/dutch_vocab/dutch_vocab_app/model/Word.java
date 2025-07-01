@@ -21,6 +21,8 @@ public class Word {
     private Date dateAdded = new Date();
     private Date lastReviewed;
     private Integer reviewCount = 0;
+    private Integer quizCount = 0;     // 答题次数
+    private Integer incorrectCount = 0; // 答错次数
     // optional fields
     private String partOfSpeech; // 词性: noun, verb, adjective etc.
     private String exampleSentence; // example

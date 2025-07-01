@@ -86,6 +86,19 @@ export const updateWordReviewInfo = async (id) => {
     return response.json();
 };
 
+// 更新单词答题统计信息
+export const updateWordQuizStats = async (id, isIncorrect) => {
+    const response = await fetch(`${API_URL}/${id}/quiz-stats?isIncorrect=${isIncorrect}`, {
+        method: 'PUT'
+    });
+
+    if (!response.ok) {
+        throw new Error(`更新答题统计信息失败! 状态码: ${response.status}`);
+    }
+
+    return response.json();
+};
+
 // 更新单词信息
 export const updateWord = async (id, wordData) => {
     try {

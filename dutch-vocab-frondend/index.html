@@ -13,6 +13,19 @@
     <button id="refreshBtn">刷新数据</button>
     <button id="bulkAddBtn">批量添加</button>
     <button id="randomWordBtn">随机单词</button>
+    
+    <div class="sort-controls">
+        <label for="sortField">排序方式:</label>
+        <select id="sortField">
+            <option value="quizCount">测验次数</option>
+            <option value="accuracy">正确率</option>
+            <option value="dutchWord">荷兰语单词</option>
+        </select>
+        <select id="sortDirection">
+            <option value="desc">降序</option>
+            <option value="asc">升序</option>
+        </select>
+    </div>
 </div>
 
 <!-- 批量添加模态框 -->
@@ -47,9 +60,8 @@
     <tr>
         <th>荷兰语</th>
         <th>英语翻译</th>
-        <th>添加日期</th>
-        <th>最后复习</th>
-        <th>复习次数</th>
+        <th>测验次数</th>
+        <th>正确率</th>
         <th>操作</th>
     </tr>
     </thead>

@@ -34,12 +34,14 @@ th, td {
 }
 
 /* 设置各列宽度 */
-#wordsTable th:nth-child(1), #wordsTable td:nth-child(1) { width: 20%; } /* 荷兰语 */
-#wordsTable th:nth-child(2), #wordsTable td:nth-child(2) { width: 20%; } /* 英语翻译 */
-#wordsTable th:nth-child(3), #wordsTable td:nth-child(3) { width: 15%; } /* 添加日期 */
-#wordsTable th:nth-child(4), #wordsTable td:nth-child(4) { width: 15%; } /* 最后复习 */
-#wordsTable th:nth-child(5), #wordsTable td:nth-child(5) { width: 10%; } /* 复习次数 */
-#wordsTable th:nth-child(6), #wordsTable td:nth-child(6) { width: 10%; } /* 操作 */
+#wordsTable th:nth-child(1), #wordsTable td:nth-child(1) { width: 15%; } /* 荷兰语 */
+#wordsTable th:nth-child(2), #wordsTable td:nth-child(2) { width: 15%; } /* 英语翻译 */
+#wordsTable th:nth-child(3), #wordsTable td:nth-child(3) { width: 12%; } /* 添加日期 */
+#wordsTable th:nth-child(4), #wordsTable td:nth-child(4) { width: 12%; } /* 最后复习 */
+#wordsTable th:nth-child(5), #wordsTable td:nth-child(5) { width: 8%; } /* 复习次数 */
+#wordsTable th:nth-child(6), #wordsTable td:nth-child(6) { width: 8%; } /* 测验次数 */
+#wordsTable th:nth-child(7), #wordsTable td:nth-child(7) { width: 10%; } /* 正确率 */
+#wordsTable th:nth-child(8), #wordsTable td:nth-child(8) { width: 10%; } /* 操作 */
 
 th {
     background-color: #3498db;
@@ -71,6 +73,31 @@ tr:nth-child(even) {
 .controls {
     margin: 20px 0;
     text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 15px;
+}
+
+.sort-controls label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.sort-controls select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
 }
 
 button {
@@ -306,16 +333,20 @@ textarea {
     display: flex;
     gap: 10px;
     margin-top: 20px;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .edit-btn {
     background-color: #3498db;
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+    flex: 1;
+    font-size: 1.1em;
 }
 
 .save-btn {
@@ -394,9 +425,15 @@ textarea {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    font-size: 1em;
-    width: 100%;
-    margin-top: 10px;
+    font-size: 1.1em;
+    flex: 1;
+    margin: 0;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .review-btn:hover {

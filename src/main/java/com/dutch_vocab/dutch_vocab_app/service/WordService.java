@@ -151,6 +151,29 @@ public class WordService {
     }
 
     /**
+     * 更新单词的答题统计信息
+     * @param id 单词ID
+     * @param isIncorrect 是否答错
+     * @return 更新后的单词
+     */
+    public Word updateWordQuizStats(String id, boolean isIncorrect) {
+        var objectId = getObjectId(id);
+        var existingWord = wordRepository.findById(objectId)
+            .orElseThrow(() -> new RuntimeException("Word not found with id: " + id));
+        
+        // 更新答题次数
+        existingWord.setQuizCount(existingWord.getQuizCount() + 1);
+        
+        // 如果答错了，更新答错次数
+        if (isIncorrect) {
+            existingWord.setIncorrectCount(existingWord.getIncorrectCount() + 1);
+        }
+        
+        log.info("Word quiz stats updated: {}, incorrect: {}", existingWord.getDutchWord(), isIncorrect);
+        return wordRepository.save(existingWord);
+    }
+
+    /**
      * 获取指定数量的随机单词，排除指定ID的单词
      * @param count 需要获取的单词数量
      * @param excludeId 需要排除的单词ID

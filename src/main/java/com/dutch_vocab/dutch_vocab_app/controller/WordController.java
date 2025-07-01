@@ -90,6 +90,20 @@ public class WordController {
      * @param excludeId 要排除的单词ID（可选）
      * @return 随机单词或单词列表
      */
+    /**
+     * 更新单词的答题统计信息
+     * @param id 单词ID
+     * @param isIncorrect 是否答错
+     * @return 更新后的单词
+     */
+    @PutMapping("/{id}/quiz-stats")
+    public Word updateQuizStats(
+            @PathVariable String id,
+            @RequestParam boolean isIncorrect) {
+        log.info("Updating quiz stats for word {}, incorrect: {}", id, isIncorrect);
+        return wordService.updateWordQuizStats(id, isIncorrect);
+    }
+
     @GetMapping("/random")
     public ResponseEntity<?> getRandomWords(
             @RequestParam(defaultValue = "1") int count,

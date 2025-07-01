@@ -10,12 +10,16 @@ const prevPageBtn = document.getElementById('prevPage');
 const nextPageBtn = document.getElementById('nextPage');
 const currentPageSpan = document.getElementById('currentPage');
 const totalPagesSpan = document.getElementById('totalPages');
+const sortFieldSelect = document.getElementById('sortField');
+const sortDirectionSelect = document.getElementById('sortDirection');
 
-// 分页状态
+// 分页和排序状态
 let currentPage = 1;
 let pageSize = parseInt(pageSizeSelect.value);
 let totalWords = 0;
 let allWords = [];
+let sortField = 'dutchWord';
+let sortDirection = 'asc';
 
 // 显示或隐藏加载状态
 export const setLoading = (isLoading) => {
@@ -44,6 +48,48 @@ const updatePaginationControls = () => {
     nextPageBtn.disabled = currentPage >= totalPages;
 };
 
+// 排序单词列表
+const sortWords = () => {
+    allWords.sort((a, b) => {
+        let valueA, valueB;
+        
+        // 根据排序字段获取比较值
+        switch (sortField) {
+            case 'dutchWord':
+                valueA = a.dutchWord || '';
+                valueB = b.dutchWord || '';
+                break;
+            case 'quizCount':
+                valueA = a.quizCount || 0;
+                valueB = b.quizCount || 0;
+                break;
+            case 'accuracy':
+                // 计算正确率
+                const quizCountA = a.quizCount || 0;
+                const incorrectCountA = a.incorrectCount || 0;
+                const quizCountB = b.quizCount || 0;
+                const incorrectCountB = b.incorrectCount || 0;
+                
+                valueA = quizCountA > 0 ? (quizCountA - incorrectCountA) / quizCountA : 0;
+                valueB = quizCountB > 0 ? (quizCountB - incorrectCountB) / quizCountB : 0;
+                break;
+            default:
+                valueA = a.dutchWord || '';
+                valueB = b.dutchWord || '';
+        }
+        
+        // 字符串比较
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+            return sortDirection === 'asc' 
+                ? valueA.localeCompare(valueB) 
+                : valueB.localeCompare(valueA);
+        }
+        
+        // 数字或日期比较
+        return sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+    });
+};
+
 // 获取当前页的单词
 const getCurrentPageWords = () => {
     const startIndex = (currentPage - 1) * pageSize;
@@ -62,12 +108,34 @@ export const renderWordsTable = (words) => {
 
     words.forEach(word => {
         const row = document.createElement('tr');
+        // 计算正确率
+        const quizCount = word.quizCount || 0;
+        const incorrectCount = word.incorrectCount || 0;
+        let accuracyRate = '0%';
+        let accuracyValue = 0;
+        
+        if (quizCount > 0) {
+            accuracyValue = ((quizCount - incorrectCount) / quizCount * 100);
+            accuracyRate = accuracyValue.toFixed(1) + '%';
+        }
+        
+        // 根据正确率确定颜色
+        let accuracyColor = '';
+        if (quizCount > 0) {
+            if (accuracyValue < 50) {
+                accuracyColor = '#ff4d4d';
+            } else if (accuracyValue < 80) {
+                accuracyColor = '#ffaa00';
+            } else {
+                accuracyColor = '#4caf50';
+            }
+        }
+
         row.innerHTML = `
             <td title="${word.dutchWord || ''}"><a href="word-detail.html?id=${word.id}" class="word-link">${word.dutchWord || ''}</a></td>
             <td title="${word.englishTranslation || ''}"><a href="word-detail.html?id=${word.id}" class="word-link">${word.englishTranslation || ''}</a></td>
-            <td title="${formatDate(word.dateAdded)}">${formatDate(word.dateAdded)}</td>
-            <td title="${formatDate(word.lastReviewed)}">${formatDate(word.lastReviewed)}</td>
-            <td title="${word.reviewCount || 0}">${word.reviewCount || 0}</td>
+            <td title="${word.quizCount || 0}">${word.quizCount || 0}</td>
+            <td title="${accuracyRate}" style="color: ${accuracyColor}">${accuracyRate}</td>
             <td><button class="delete-btn" data-id="${word.id}">删除</button></td>
         `;
 
