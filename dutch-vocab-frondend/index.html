@@ -15,23 +15,6 @@
     <button id="randomWordBtn">随机单词</button>
 </div>
 
-<!-- 随机单词模态框 -->
-<div id="randomWordModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>随机单词</h2>
-        <div class="word-detail">
-            <p><strong>荷兰语:</strong> <span id="randomDutchWord"></span></p>
-            <p><strong>英语翻译:</strong> <span id="randomEnglishTranslation"></span></p>
-            <p><strong>中文翻译:</strong> <span id="randomChineseTranslation"></span></p>
-            <p><strong>例句:</strong> <span id="randomExample"></span></p>
-        </div>
-        <div class="controls">
-            <button id="nextRandomWordBtn">下一个</button>
-        </div>
-    </div>
-</div>
-
 <!-- 批量添加模态框 -->
 <div id="bulkAddModal" class="modal">
     <div class="modal-content">
@@ -48,7 +31,7 @@
     }
 ]'></textarea>
         </div>
-        <div class="controls">
+        <div class="controls"></div>
             <button id="submitBulkBtn" class="submit-btn">提交</button>
         </div>
         <div id="bulkSuccessMessage" class="success-message"></div>
@@ -75,7 +58,7 @@
 
 <!-- 分页控制 -->
 <div class="pagination-controls">
-    <div class="page-size-selector">
+    <div class="page-size-selector"></div>
         每页显示：
         <select id="pageSize">
             <option value="10">10</option>
@@ -101,7 +84,7 @@
     <div class="form-group">
         <label for="englishTranslation">英语翻译:</label>
         <input type="text" id="englishTranslation" placeholder="输入英语翻译">
-    </div>
+    </div>div>
     <div class="controls">
         <button id="addWordBtn" class="submit-btn">添加单词</button>
     </div>

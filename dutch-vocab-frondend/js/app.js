@@ -5,41 +5,17 @@ import { getRandomWord } from './api.service.js';
 
 // 处理随机单词功能
 const setupRandomWordFeature = () => {
-    const modal = document.getElementById('randomWordModal');
     const randomWordBtn = document.getElementById('randomWordBtn');
-    const closeBtn = modal.querySelector('.close');
-    const nextRandomWordBtn = document.getElementById('nextRandomWordBtn');
     
-    // 显示随机单词
-    const showRandomWord = async () => {
+    // 点击随机单词按钮
+    randomWordBtn.addEventListener('click', async () => {
         try {
             const word = await getRandomWord();
-            document.getElementById('randomDutchWord').textContent = word.dutch || '';
-            document.getElementById('randomEnglishTranslation').textContent = word.english || '';
-            document.getElementById('randomChineseTranslation').textContent = word.chinese || '';
-            document.getElementById('randomExample').textContent = word.example || '';
-            modal.style.display = 'block';
+            // 在当前页面导航到随机单词页面
+            window.location.href = `random-word.html?id=${word.id}`;
         } catch (error) {
             console.error('获取随机单词失败:', error);
             alert('获取随机单词失败，请稍后再试');
-        }
-    };
-    
-    // 点击随机单词按钮
-    randomWordBtn.addEventListener('click', showRandomWord);
-    
-    // 点击下一个按钮
-    nextRandomWordBtn.addEventListener('click', showRandomWord);
-    
-    // 关闭模态框
-    closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-    
-    // 点击模态框外部关闭
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            modal.style.display = 'none';
         }
     });
 };
