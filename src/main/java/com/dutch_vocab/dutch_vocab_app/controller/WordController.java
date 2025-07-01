@@ -85,15 +85,26 @@ public class WordController {
     }
     
     /**
-     * 获取一个随机单词
-     * @return 随机单词
+     * 获取随机单词
+     * @param count 要获取的单词数量，默认为1
+     * @param excludeId 要排除的单词ID（可选）
+     * @return 随机单词或单词列表
      */
     @GetMapping("/random")
-    public ResponseEntity<?> getRandomWord() {
-        log.info("Getting a random word");
+    public ResponseEntity<?> getRandomWords(
+            @RequestParam(defaultValue = "1") int count,
+            @RequestParam(required = false) String excludeId) {
+        log.info("Getting {} random words (excluding ID: {})", count, excludeId);
         try {
-            Word word = wordService.getRandomWord();
-            return ResponseEntity.ok(word);
+            if (count == 1 && excludeId == null) {
+                var word = wordService.getRandomWord();
+                return ResponseEntity.ok(word);
+            }
+            List<Word> words = wordService.getRandomWords(count, excludeId);
+            return ResponseEntity.ok(words);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
         } catch (NoWordsAvailableException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("message", "No words available in the database"));

@@ -170,3 +170,35 @@ export const getRandomWord = async (difficultyLevel = null) => {
         throw error;
     }
 };
+
+// 获取多个随机单词（用于选择题选项）
+export const getRandomWords = async (count = 3, excludeId = null) => {
+    try {
+        // 构建查询参数
+        const params = new URLSearchParams();
+        params.append('count', count);
+        if (excludeId) {
+            params.append('excludeId', excludeId);
+        }
+
+        const url = `${API_URL}/random?${params.toString()}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            let errorMessage = `获取随机单词失败! 状态码: ${response.status}`;
+            try {
+                const errorData = await response.json();
+                if (errorData.message) {
+                    errorMessage = errorData.message;
+                }
+            } catch (e) {
+                console.error('无法解析错误响应:', e);
+            }
+            throw new Error(errorMessage);
+        }
+        return response.json();
+    } catch (error) {
+        console.error('Get random words error:', error);
+        throw error;
+    }
+};

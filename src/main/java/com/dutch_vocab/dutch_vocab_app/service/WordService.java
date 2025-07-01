@@ -147,33 +147,76 @@ public class WordService {
      * @throws RuntimeException 如果发生其他错误
      */
     public Word getRandomWord() {
+        return getRandomWords(1, null).get(0);
+    }
+
+    /**
+     * 获取指定数量的随机单词，排除指定ID的单词
+     * @param count 需要获取的单词数量
+     * @param excludeId 需要排除的单词ID
+     * @return 随机单词列表
+     * @throws NoWordsAvailableException 如果没有找到足够的单词
+     * @throws IllegalArgumentException 如果请求的数量小于1
+     * @throws RuntimeException 如果发生其他错误
+     */
+    public List<Word> getRandomWords(int count, String excludeId) {
         try {
-            log.info("Attempting to get a random word");
+            if (count < 1) {
+                throw new IllegalArgumentException("Count must be greater than 0");
+            }
+
+            log.info("Attempting to get {} random words (excluding ID: {})", count, excludeId);
             
-            // 获取单词总数
-            long count = mongoTemplate.count(new Query(), Word.class);
-            if (count == 0) {
+            // 创建基础查询
+            var query = new Query();
+            
+            // 如果有需要排除的ID，添加到查询条件中
+            if (excludeId != null && !excludeId.isEmpty()) {
+                ObjectId excludeObjectId = getObjectId(excludeId);
+                query.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("_id").ne(excludeObjectId));
+            }
+            
+            // 获取符合条件的单词总数
+            long totalCount = mongoTemplate.count(query, Word.class);
+            if (totalCount == 0) {
                 log.error("No words available in the database");
                 throw new NoWordsAvailableException("No words available in the database");
             }
+
+            // 如果请求的数量大于总数，调整为总数
+            count = (int) Math.min(count, totalCount);
             
-            // 生成随机偏移量
-            int randomOffset = new Random().nextInt((int) count);
-            
-            // 查询随机单词
-            Query query = new Query().skip(randomOffset).limit(1);
-            Word randomWord = mongoTemplate.findOne(query, Word.class);
-            
-            if (randomWord != null) {
-                log.info("Successfully retrieved random word: {}", randomWord.getDutchWord());
-                return randomWord;
+            // 使用聚合管道来获取随机单词
+            var randomWords = new ArrayList<Word>();
+            var usedOffsets = new ArrayList<Integer>();
+            var random = new Random();
+
+            while (randomWords.size() < count) {
+                int randomOffset = random.nextInt((int) totalCount);
+                // 确保不重复选择同一个偏移量
+                if (!usedOffsets.contains(randomOffset)) {
+                    usedOffsets.add(randomOffset);
+                    var offsetQuery = Query.of(query).skip(randomOffset).limit(1);
+                    var word = mongoTemplate.findOne(offsetQuery, Word.class);
+                    if (word != null) {
+                        randomWords.add(word);
+                    }
+                }
             }
             
-            log.error("Failed to retrieve random word");
-            throw new NoWordsAvailableException("Failed to retrieve random word");
+            if (!randomWords.isEmpty()) {
+                log.info("Successfully retrieved {} random words", randomWords.size());
+                return randomWords;
+            }
+            
+            log.error("Failed to retrieve random words");
+            throw new NoWordsAvailableException("Failed to retrieve random words");
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid count parameter: {}", e.getMessage());
+            throw e;
         } catch (Exception e) {
-            log.error("Error getting random word: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to get random word: " + e.getMessage());
+            log.error("Error getting random words: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to get random words: " + e.getMessage());
         }
     }
 }
