@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机单词</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .options-container {
+            margin: 20px 0;
+        }
+        .option-button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .option-button:hover {
+            background-color: #d6eaf8;
+            border-color: #2980b9;
+        }
+        .option-button.correct {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #45a049;
+        }
+        .option-button.incorrect {
+            background-color: #f44336;
+            color: white;
+            border-color: #da190b;
+        }
+        .feedback {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .feedback.success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        .feedback.error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+    </style>
+</head>
+<body>
+    <div class="word-detail-container">
+        <div class="navigation">
+            <a href="index.html" class="back-btn">返回列表</a>
+            <button id="nextRandomWordBtn" class="next-btn">下一个随机单词</button>
+        </div>
+        
+        <div id="loading" class="loading">正在加载数据...</div>
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="wordDetail" class="word-detail" style="display: none;">
+            <h1 id="dutchWord"></h1>
+            
+            <!-- 选择题部分 -->
+            <div id="quizContainer" class="options-container">
+                <h3>选择正确的英语翻译：</h3>
+                <div id="optionsContainer"></div>
+                <div id="feedback" class="feedback"></div>
+            </div>
+            
+            <!-- 单词详情部分（答题后显示） -->
+            <div id="wordInfoContainer" style="display: none;">
+                <div class="detail-item">
+                    <label>英语翻译:</label>
+                    <span id="englishTranslation"></span>
+                </div>
+                <div id="partOfSpeechContainer" class="detail-item" style="display: none;">
+                    <label>词性:</label>
+                    <span id="partOfSpeech"></span>
+                </div>
+                <div id="difficultyContainer" class="detail-item" style="display: none;">
+                    <label>难度:</label>
+                    <span id="difficulty"></span>
+                </div>
+                <div id="exampleSentenceContainer" class="detail-item" style="display: none;">
+                    <label>示例句子:</label>
+                    <span id="exampleSentence"></span>
+                </div>
+                <div class="detail-item">
+                    <label>添加日期:</label>
+                    <span id="dateAdded"></span>
+                </div>
+                <div class="detail-item">
+                    <label>最后复习:</label>
+                    <span id="lastReviewed"></span>
+                </div>
+                <div class="detail-item">
+                    <label>复习次数:</label>
+                    <span id="reviewCount"></span>
+                </div>
+                <div class="detail-item">
+                    <label>答题次数:</label>
+                    <span id="quizCount"></span>
+                </div>
+                <div class="detail-item">
+                    <label>错误次数:</label>
+                    <span id="incorrectCount"></span>
+                </div>
+                <div class="detail-item">
+                    <label>正确率:</label>
+                    <span id="accuracyRate"></span>
+                </div>
+                <div class="button-group">
+                    <button id="markReviewedButton" class="review-btn">标记为已复习</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/random-word.js"></script>
+</body>
+</html>
