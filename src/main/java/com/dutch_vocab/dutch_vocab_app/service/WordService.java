@@ -182,13 +182,41 @@ public class WordService {
      * @throws IllegalArgumentException 如果请求的数量小于1
      * @throws RuntimeException 如果发生其他错误
      */
+    /**
+     * 计算单词的权重
+     * 权重计算规则：
+     * 1. 基础权重 = 1.0
+     * 2. 如果单词从未被测试过（quizCount = 0），权重 *= 2.0
+     * 3. 如果单词有测试记录，权重 *= (1.0 + incorrectRate)
+     */
+    private double calculateWeight(Word word) {
+        double weight = 1.0;
+        
+        // 如果单词从未被测试过，给予较高权重
+        if (word.getQuizCount() == 0) {
+            weight *= 2.0;
+        } else {
+            // 计算错误率并增加权重
+            double incorrectRate = (double) word.getIncorrectCount() / word.getQuizCount();
+            weight *= (1.0 + incorrectRate);
+        }
+        
+        return weight;
+    }
+
+    /**
+     * 获取加权随机单词
+     * @param count 需要获取的单词数量
+     * @param excludeId 需要排除的单词ID
+     * @return 随机单词列表
+     */
     public List<Word> getRandomWords(int count, String excludeId) {
         try {
             if (count < 1) {
                 throw new IllegalArgumentException("Count must be greater than 0");
             }
 
-            log.info("Attempting to get {} random words (excluding ID: {})", count, excludeId);
+            log.info("Attempting to get {} weighted random words (excluding ID: {})", count, excludeId);
             
             // 创建基础查询
             var query = new Query();
@@ -199,47 +227,59 @@ public class WordService {
                 query.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("_id").ne(excludeObjectId));
             }
             
-            // 获取符合条件的单词总数
-            long totalCount = mongoTemplate.count(query, Word.class);
-            if (totalCount == 0) {
+            // 获取所有符合条件的单词
+            List<Word> allWords = mongoTemplate.find(query, Word.class);
+            if (allWords.isEmpty()) {
                 log.error("No words available in the database");
                 throw new NoWordsAvailableException("No words available in the database");
             }
 
             // 如果请求的数量大于总数，调整为总数
-            count = (int) Math.min(count, totalCount);
+            count = Math.min(count, allWords.size());
             
-            // 使用聚合管道来获取随机单词
-            var randomWords = new ArrayList<Word>();
-            var usedOffsets = new ArrayList<Integer>();
-            var random = new Random();
-
-            while (randomWords.size() < count) {
-                int randomOffset = random.nextInt((int) totalCount);
-                // 确保不重复选择同一个偏移量
-                if (!usedOffsets.contains(randomOffset)) {
-                    usedOffsets.add(randomOffset);
-                    var offsetQuery = Query.of(query).skip(randomOffset).limit(1);
-                    var word = mongoTemplate.findOne(offsetQuery, Word.class);
-                    if (word != null) {
-                        randomWords.add(word);
+            // 计算每个单词的权重
+            List<Double> weights = new ArrayList<>();
+            double totalWeight = 0.0;
+            for (Word word : allWords) {
+                double weight = calculateWeight(word);
+                weights.add(weight);
+                totalWeight += weight;
+            }
+            
+            // 使用权重进行随机选择
+            List<Word> selectedWords = new ArrayList<>();
+            Random random = new Random();
+            
+            while (selectedWords.size() < count) {
+                double randomValue = random.nextDouble() * totalWeight;
+                double currentSum = 0.0;
+                
+                for (int i = 0; i < allWords.size(); i++) {
+                    if (selectedWords.contains(allWords.get(i))) {
+                        continue;  // 跳过已选择的单词
+                    }
+                    
+                    currentSum += weights.get(i);
+                    if (currentSum >= randomValue) {
+                        selectedWords.add(allWords.get(i));
+                        break;
                     }
                 }
             }
             
-            if (!randomWords.isEmpty()) {
-                log.info("Successfully retrieved {} random words", randomWords.size());
-                return randomWords;
+            if (!selectedWords.isEmpty()) {
+                log.info("Successfully retrieved {} weighted random words", selectedWords.size());
+                return selectedWords;
             }
             
-            log.error("Failed to retrieve random words");
-            throw new NoWordsAvailableException("Failed to retrieve random words");
+            log.error("Failed to retrieve weighted random words");
+            throw new NoWordsAvailableException("Failed to retrieve weighted random words");
         } catch (IllegalArgumentException e) {
             log.error("Invalid count parameter: {}", e.getMessage());
             throw e;
         } catch (Exception e) {
-            log.error("Error getting random words: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to get random words: " + e.getMessage());
+            log.error("Error getting weighted random words: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to get weighted random words: " + e.getMessage());
         }
     }
 }

@@ -242,13 +242,18 @@ textarea {
 
 /* 分页控制样式 */
 .pagination-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin: 20px 0;
     padding: 10px;
     background-color: #f9f9f9;
     border-radius: 4px;
+    text-align: center;
+}
+
+.pagination-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 .page-size-selector {
@@ -266,6 +271,7 @@ textarea {
 .pagination {
     display: flex;
     align-items: center;
+    margin: 0;
 }
 
 .pagination button {
