@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词详情</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="word-detail-container">
+        <div class="navigation">
+            <a href="index.html" class="back-btn">返回列表</a>
+        </div>
+        
+        <div id="loading" class="loading">正在加载数据...</div>
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="wordDetail" class="word-detail" style="display: none;">
+            <!-- 查看模式 -->
+            <div id="viewMode">
+                <h1 id="dutchWord"></h1>
+                <div class="detail-item">
+                    <label>英语翻译:</label>
+                    <span id="englishTranslation"></span>
+                </div>
+                <div id="partOfSpeechContainer" class="detail-item" style="display: none;">
+                    <label>词性:</label>
+                    <span id="partOfSpeech"></span>
+                </div>
+                <div id="difficultyContainer" class="detail-item" style="display: none;">
+                    <label>难度:</label>
+                    <span id="difficulty"></span>
+                </div>
+                <div id="exampleSentenceContainer" class="detail-item" style="display: none;">
+                    <label>示例句子:</label>
+                    <span id="exampleSentence"></span>
+                </div>
+                <div class="detail-item">
+                    <label>添加日期:</label>
+                    <span id="dateAdded"></span>
+                </div>
+                <div class="detail-item">
+                    <label>最后复习:</label>
+                    <span id="lastReviewed"></span>
+                </div>
+                <div class="detail-item">
+                    <label>复习次数:</label>
+                    <span id="reviewCount"></span>
+                </div>
+                <div class="button-group">
+                    <button id="markReviewedButton" class="review-btn">标记为<br>已复习</button>
+                    <button id="editButton" class="edit-btn">编辑</button>
+                </div>
+            </div>
+
+            <!-- 编辑模式 -->
+            <div id="editMode" style="display: none;">
+                <form id="editForm" class="edit-form">
+                    <div class="form-group">
+                        <label for="editDutchWord">荷兰语单词:</label>
+                        <input type="text" id="editDutchWord" name="dutchWord" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEnglishTranslation">英语翻译:</label>
+                        <input type="text" id="editEnglishTranslation" name="englishTranslation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPartOfSpeech">词性:</label>
+                        <select id="editPartOfSpeech" name="partOfSpeech">
+                            <option value="NOUN">名词</option>
+                            <option value="VERB">动词</option>
+                            <option value="ADJECTIVE">形容词</option>
+                            <option value="ADVERB">副词</option>
+                            <option value="PREPOSITION">介词</option>
+                            <option value="CONJUNCTION">连词</option>
+                            <option value="PRONOUN">代词</option>
+                            <option value="OTHER">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDifficulty">难度:</label>
+                        <select id="editDifficulty" name="difficulty">
+                            <option value="EASY">简单</option>
+                            <option value="MEDIUM">中等</option>
+                            <option value="HARD">困难</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editExampleSentence">示例句子:</label>
+                        <textarea id="editExampleSentence" name="exampleSentence" rows="3"></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="save-btn">保存</button>
+                        <button type="button" id="cancelButton" class="cancel-btn">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/word-detail.js"></script>
+</body>
+</html>

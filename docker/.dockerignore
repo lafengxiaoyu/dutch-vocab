@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.project
+.settings/
+.classpath
+
+# Build directories
+target/
+build/
+out/
+bin/
+
+# Logs
+logs/
+*.log
+
+# Frontend files (will be deployed separately)
+dutch-vocab-frondend/
+
+# Docker files
+.dockerignore
+docker-compose*.yml
+
+# Misc
+README.md
+LICENSE
+*.md
+.DS_Store
