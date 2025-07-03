@@ -164,6 +164,9 @@ export const fetchAndDisplayWords = async () => {
         allWords = await getWords();
         totalWords = allWords.length;
         
+        // 应用排序
+        sortWords();
+        
         // 确保当前页在有效范围内
         const totalPages = calculateTotalPages();
         if (currentPage > totalPages) {
@@ -204,5 +207,26 @@ export const initializePagination = () => {
             renderWordsTable(getCurrentPageWords());
             updatePaginationControls();
         }
+    });
+};
+
+// 初始化排序事件监听器
+export const initializeSorting = () => {
+    // 排序字段改变事件
+    sortFieldSelect.addEventListener('change', () => {
+        sortField = sortFieldSelect.value;
+        sortWords();
+        currentPage = 1; // 重置到第一页
+        renderWordsTable(getCurrentPageWords());
+        updatePaginationControls();
+    });
+
+    // 排序方向改变事件
+    sortDirectionSelect.addEventListener('change', () => {
+        sortDirection = sortDirectionSelect.value;
+        sortWords();
+        currentPage = 1; // 重置到第一页
+        renderWordsTable(getCurrentPageWords());
+        updatePaginationControls();
     });
 };

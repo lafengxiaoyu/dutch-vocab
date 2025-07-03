@@ -45,7 +45,7 @@ export function setupBulkAddForm(onSuccess) {
 
             // 验证每个单词对象的格式
             wordsData.forEach((word, index) => {
-                if (!word.dutchWord || !word.englishTranslation || !word.chineseTranslation) {
+                if (!word.dutchWord || !word.englishTranslation) {
                     throw new Error(`第${index + 1}个单词缺少必要字段`);
                 }
             });
