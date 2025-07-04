@@ -216,7 +216,13 @@ async function displayWordDetails(word) {
     // 处理难度显示
     const difficultyContainer = document.getElementById('difficultyContainer');
     const difficultyElement = document.getElementById('difficulty');
-    if (word.difficulty && word.difficulty.trim() !== '') {
+    
+    // 优先使用difficultyLevel（数字1-5）
+    if (word.difficultyLevel) {
+        difficultyElement.textContent = `${word.difficultyLevel} (${getDifficultyText(word.difficultyLevel)})`;
+        difficultyContainer.style.display = 'block';
+    } else if (word.difficulty && word.difficulty.trim() !== '') {
+        // 兼容旧数据，使用difficulty字段
         difficultyElement.textContent = word.difficulty;
         difficultyContainer.style.display = 'block';
     } else {
@@ -336,6 +342,37 @@ async function checkAnswer() {
             } else {
                 accuracyElement.style.color = '#4caf50'; // 绿色
             }
+            
+            // 更新难度级别显示
+            if (updatedWord.difficultyLevel) {
+                const difficultyElement = document.getElementById('difficulty');
+                const difficultyContainer = document.getElementById('difficultyContainer');
+                
+                if (difficultyElement && difficultyContainer) {
+                    difficultyElement.textContent = `${updatedWord.difficultyLevel} (${getDifficultyText(updatedWord.difficultyLevel)})`;
+                    difficultyContainer.style.display = 'block';
+                    
+                    // 如果难度级别发生变化，显示提示
+                    if (word.difficultyLevel !== updatedWord.difficultyLevel) {
+                        const difficultyChangeMsg = document.createElement('div');
+                        difficultyChangeMsg.className = 'difficulty-change';
+                        difficultyChangeMsg.textContent = `难度级别已从 ${word.difficultyLevel || '未设置'} 调整为 ${updatedWord.difficultyLevel}`;
+                        difficultyChangeMsg.style.color = '#0066cc';
+                        difficultyChangeMsg.style.fontStyle = 'italic';
+                        difficultyChangeMsg.style.marginTop = '5px';
+                        
+                        // 将提示添加到难度容器后面
+                        difficultyContainer.appendChild(difficultyChangeMsg);
+                        
+                        // 3秒后移除提示
+                        setTimeout(() => {
+                            if (difficultyChangeMsg.parentNode === difficultyContainer) {
+                                difficultyContainer.removeChild(difficultyChangeMsg);
+                            }
+                        }, 5000);
+                    }
+                }
+            }
         } catch (error) {
             console.error('更新答题统计失败:', error);
             // 不显示错误给用户，因为这不影响主要功能
@@ -435,5 +472,23 @@ async function updateWordReview(wordId) {
         if (loadingElement) {
             loadingElement.style.display = 'none';
         }
+    }
+}
+
+// 将难度级别数字转换为文本描述
+function getDifficultyText(level) {
+    switch (parseInt(level)) {
+        case 1:
+            return '非常简单';
+        case 2:
+            return '简单';
+        case 3:
+            return '中等';
+        case 4:
+            return '困难';
+        case 5:
+            return '非常困难';
+        default:
+            return '未知难度';
     }
 }

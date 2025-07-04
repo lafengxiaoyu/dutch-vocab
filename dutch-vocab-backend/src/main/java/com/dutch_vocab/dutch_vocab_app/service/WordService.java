@@ -151,7 +151,7 @@ public class WordService {
     }
 
     /**
-     * 更新单词的答题统计信息
+     * 更新单词的答题统计信息并根据正确率自动调整难度级别
      * @param id 单词ID
      * @param isIncorrect 是否答错
      * @return 更新后的单词
@@ -169,8 +169,62 @@ public class WordService {
             existingWord.setIncorrectCount(existingWord.getIncorrectCount() + 1);
         }
         
-        log.info("Word quiz stats updated: {}, incorrect: {}", existingWord.getDutchWord(), isIncorrect);
+        // 根据正确率自动调整难度级别
+        adjustDifficultyBasedOnAccuracy(existingWord);
+        
+        log.info("Word quiz stats updated: {}, incorrect: {}, difficulty level: {}", 
+                existingWord.getDutchWord(), isIncorrect, existingWord.getDifficultyLevel());
         return wordRepository.save(existingWord);
+    }
+    
+    /**
+     * 根据单词的正确率自动调整难度级别
+     * 规则：
+     * 1. 正确率70-100%或答题次数小于3次 -> 难度级别1（最简单）
+     * 2. 正确率50-70% -> 难度级别2
+     * 3. 正确率30-50% -> 难度级别3
+     * 4. 正确率10-30% -> 难度级别4
+     * 5. 正确率0-10% -> 难度级别5（最难）
+     * @param word 需要调整难度的单词
+     */
+    private void adjustDifficultyBasedOnAccuracy(Word word) {
+        int quizCount = word.getQuizCount();
+        int incorrectCount = word.getIncorrectCount();
+        int currentDifficulty = word.getDifficultyLevel();
+        
+        // 如果答题次数小于3次，设置为最简单难度
+        if (quizCount < 3) {
+            if (currentDifficulty != 1) {
+                log.info("Setting difficulty to 1 for word: {} (quiz count < 3)", word.getDutchWord());
+                word.setDifficultyLevel(1);
+            }
+            return;
+        }
+        
+        // 计算正确率
+        double accuracyRate = (double) (quizCount - incorrectCount) / quizCount;
+        int newDifficulty;
+        
+        // 根据正确率设置难度级别
+        if (accuracyRate >= 0.7) {
+            newDifficulty = 1; // 70-100% -> 难度1
+        } else if (accuracyRate >= 0.5) {
+            newDifficulty = 2; // 50-70% -> 难度2
+        } else if (accuracyRate >= 0.3) {
+            newDifficulty = 3; // 30-50% -> 难度3
+        } else if (accuracyRate >= 0.1) {
+            newDifficulty = 4; // 10-30% -> 难度4
+        } else {
+            newDifficulty = 5; // 0-10% -> 难度5
+        }
+        
+        // 如果难度级别有变化，更新并记录日志
+        if (currentDifficulty != newDifficulty) {
+            log.info("Adjusted difficulty for word: {} from {} to {} (accuracy: {})", 
+                    word.getDutchWord(), currentDifficulty, newDifficulty, 
+                    String.format("%.2f", accuracyRate));
+            word.setDifficultyLevel(newDifficulty);
+        }
     }
 
     /**
