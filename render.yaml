@@ -16,9 +16,8 @@ services:
     # startCommand: java -jar target/*.jar
 
   # 前端静态站点
-  - type: static
+  - type: web
     name: dutch-vocab-frontend
-    env: static
     buildCommand: echo "Static site, no build needed"
     staticPublishPath: ./dutch-vocab-frontend
     routes:
