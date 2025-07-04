@@ -302,7 +302,7 @@ async function checkAnswer() {
         // 检查答案是否正确（不区分大小写和空格）
         const isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(correctAnswer);
         
-        // 显示反馈信息
+        // 1. 首先确保反馈信息显示
         feedbackElement.textContent = isCorrect 
             ? '恭喜！你的答案正确。' 
             : `很遗憾，正确的翻译是: ${correctAnswer}`;
@@ -369,7 +369,7 @@ async function checkAnswer() {
                             if (difficultyChangeMsg.parentNode === difficultyContainer) {
                                 difficultyContainer.removeChild(difficultyChangeMsg);
                             }
-                        }, 5000);
+                        }, 3000);
                     }
                 }
             }
@@ -378,10 +378,17 @@ async function checkAnswer() {
             // 不显示错误给用户，因为这不影响主要功能
         }
         
-        // 延迟显示单词详情
+        // 2. 确保反馈已显示后，再设置定时器显示详情
         setTimeout(() => {
-            document.getElementById('wordInfoContainer').style.display = 'block';
-        }, 1500);
+            // 再次确认反馈已显示（防御性编程）
+            if (feedbackElement.style.display === 'block') {
+                document.getElementById('wordInfoContainer').style.display = 'block';
+            } else {
+                // 如果反馈未显示，先显示反馈再显示详情
+                feedbackElement.style.display = 'block';
+                document.getElementById('wordInfoContainer').style.display = 'block';
+            }
+        }, 500);
         
     } catch (error) {
         console.error('检查答案失败:', error);
@@ -391,11 +398,19 @@ async function checkAnswer() {
     }
 }
 
-// 标准化答案，去除多余空格并转为小写，用于比较
+// 标准化答案，去除多余空格并转为小写，忽略"the"的存在与否，用于比较
 function normalizeAnswer(answer) {
     if (!answer) return '';
-    // 去除所有空格，转为小写
-    return answer.toLowerCase().replace(/\s+/g, '');
+    
+    // 转为小写
+    let normalized = answer.toLowerCase();
+    
+    // 移除"the"（包括前后可能的空格）
+    // 1. 移除开头的"the "
+    normalized = normalized.replace(/^the\s+/i, '');
+    
+    // 去除所有空格
+    return normalized.replace(/\s+/g, '');
 }
 
 // 格式化日期

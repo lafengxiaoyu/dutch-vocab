@@ -283,7 +283,7 @@ async function handleOptionClick(optionElement, word) {
         }
     });
     
-    // 显示反馈信息
+    // 1. 首先确保反馈信息显示
     feedbackElement.textContent = isCorrect 
         ? '恭喜！你选择了正确的翻译。' 
         : `很遗憾，正确的翻译是: ${word.englishTranslation}`;
@@ -328,10 +328,17 @@ async function handleOptionClick(optionElement, word) {
         // 不显示错误给用户，因为这不影响主要功能
     }
     
-    // 延迟显示单词详情
+    // 2. 确保反馈已显示后，再设置定时器显示详情
     setTimeout(() => {
-        document.getElementById('wordInfoContainer').style.display = 'block';
-    }, 1500);
+        // 再次确认反馈已显示（防御性编程）
+        if (feedbackElement.style.display === 'block') {
+            document.getElementById('wordInfoContainer').style.display = 'block';
+        } else {
+            // 如果反馈未显示，先显示反馈再显示详情
+            feedbackElement.style.display = 'block';
+            document.getElementById('wordInfoContainer').style.display = 'block';
+        }
+    }, 500);
 }
 
 // 数组随机排序函数
