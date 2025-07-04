@@ -1,4 +1,18 @@
-const API_URL = 'http://localhost:8080/api/words';
+// 根据当前环境动态选择API URL
+const getApiBaseUrl = () => {
+    // 检查当前窗口URL
+    const isLocalhost = window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1';
+    
+    if (isLocalhost) {
+        return 'http://localhost:8080/api/words';
+    } else {
+        // 生产环境URL - 使用相对路径，这样会自动使用当前域名
+        return '/api/words';
+    }
+};
+
+const API_URL = getApiBaseUrl();
 
 const wordsBody = document.getElementById('wordsBody');
 const loadingDiv = document.getElementById('loading');

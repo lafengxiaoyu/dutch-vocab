@@ -75,7 +75,27 @@ docker-compose down -v
 
 ### Render部署
 
-#### 1. 创建Web Service
+#### 使用Render Blueprint（推荐）
+
+项目已配置Render Blueprint，可以一键部署整个应用：
+
+1. 确保你的代码已推送到GitHub/GitLab仓库
+2. 登录[Render](https://render.com/)
+3. 点击"New +"，选择"Blueprint"
+4. 连接你的GitHub/GitLab仓库
+5. Render会自动检测`render.yaml`文件并创建所有必要的服务
+
+#### 配置环境变量
+
+部署过程中，Render会提示你设置以下环境变量：
+- `SPRING_DATA_MONGODB_URI`: MongoDB连接URI（格式：`mongodb+srv://username:password@cluster.mongodb.net/dutch_vocab`）
+- `SPRING_PROFILES_ACTIVE`: 设置为`prod`
+
+#### 手动部署（替代方案）
+
+如果你不想使用Blueprint，也可以手动部署：
+
+##### 1. 创建Web Service
 
 1. 登录[Render](https://render.com/)
 2. 点击"New +"，选择"Web Service"
@@ -86,20 +106,19 @@ docker-compose down -v
    - **Region**: 选择离用户最近的区域
    - **Branch**: `main`（或你的主分支）
 
-#### 2. 配置环境变量
+##### 2. 配置环境变量
 
 添加以下环境变量：
-- `MONGO_USERNAME`: MongoDB Atlas用户名
-- `MONGO_PASSWORD`: MongoDB Atlas密码
+- `SPRING_DATA_MONGODB_URI`: MongoDB连接URI
 - `SPRING_PROFILES_ACTIVE`: `prod`
 
-#### 3. 部署前端
+##### 3. 部署前端
 
 1. 点击"New +"，选择"Static Site"
 2. 连接你的GitHub/GitLab仓库
 3. 配置：
    - **Name**: `dutch-vocab-frontend`
-   - **Publish directory**: `dutch-vocab-frondend`
+   - **Publish directory**: `dutch-vocab-frontend`
 
 ### 其他云平台部署
 
@@ -125,8 +144,7 @@ docker-compose down -v
 
 在部署平台上设置：
 
-- `MONGO_USERNAME`: MongoDB Atlas用户名
-- `MONGO_PASSWORD`: MongoDB Atlas密码
+- `SPRING_DATA_MONGODB_URI`: MongoDB连接URI（格式：`mongodb+srv://username:password@cluster.mongodb.net/dutch_vocab`）
 - `SPRING_PROFILES_ACTIVE`: 应用程序配置文件（设为prod）
 - `PORT`: 应用程序端口（某些平台会自动设置）
 
