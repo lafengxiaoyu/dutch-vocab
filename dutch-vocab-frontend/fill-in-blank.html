@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>荷兰语填空测试 - Dutch Vocabulary App</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .word-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .dutch-word {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .answer-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .answer-input {
+            padding: 10px;
+            font-size: 1.2em;
+            width: 80%;
+            max-width: 400px;
+            margin-bottom: 10px;
+        }
+        
+        .submit-answer {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .submit-answer:hover {
+            background-color: #45a049;
+        }
+        
+        .feedback {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+        
+        .word-info {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .word-info p {
+            margin: 5px 0;
+        }
+        
+        .word-info .label {
+            font-weight: bold;
+            display: inline-block;
+            width: 100px;
+        }
+        
+        .button-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .button-container button {
+            padding: 8px 16px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .button-container button:hover {
+            background-color: #0b7dda;
+        }
+        
+        .back-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>荷兰语填空测试</h1>
+        
+        <button class="back-btn">返回首页</button>
+        
+        <div id="loading" style="display: block;">
+            <p>加载中...</p>
+        </div>
+        
+        <div id="error" style="display: none; color: red; padding: 10px; background-color: #ffeeee; border: 1px solid #ffcccc; border-radius: 4px;"></div>
+        
+        <div id="wordDetail" style="display: none;" data-word-id="">
+            <div class="word-container">
+                <div id="dutchWord" class="dutch-word"></div>
+            </div>
+            
+            <div class="answer-container">
+                <p>请输入这个荷兰语单词的英文翻译：</p>
+                <input type="text" id="answerInput" class="answer-input" placeholder="输入英文翻译..." autocomplete="off">
+                <button id="submitAnswer" class="submit-answer">提交答案</button>
+            </div>
+            
+            <div id="feedback" class="feedback"></div>
+            
+            <div id="wordInfoContainer" class="word-info" style="display: none;">
+                <h3>单词详情</h3>
+                <p><span class="label">荷兰语:</span> <span id="dutchWordInfo"></span></p>
+                <p><span class="label">英文翻译:</span> <span id="englishTranslation"></span></p>
+                <div id="partOfSpeechContainer">
+                    <p><span class="label">词性:</span> <span id="partOfSpeech"></span></p>
+                </div>
+                <div id="difficultyContainer">
+                    <p><span class="label">难度:</span> <span id="difficulty"></span></p>
+                </div>
+                <div id="exampleSentenceContainer">
+                    <p><span class="label">例句:</span> <span id="exampleSentence"></span></p>
+                </div>
+                <p><span class="label">添加日期:</span> <span id="dateAdded"></span></p>
+                <p><span class="label">上次复习:</span> <span id="lastReviewed"></span></p>
+                <p><span class="label">复习次数:</span> <span id="reviewCount"></span></p>
+                <p><span class="label">测试次数:</span> <span id="quizCount"></span></p>
+                <p><span class="label">错误次数:</span> <span id="incorrectCount"></span></p>
+                <p><span class="label">正确率:</span> <span id="accuracyRate"></span></p>
+            </div>
+            
+            <div class="button-container">
+                <button id="markReviewedButton">标记为已复习</button>
+                <button id="nextRandomWordBtn">下一个单词</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="js/fill-in-blank.js"></script>
+</body>
+</html>
