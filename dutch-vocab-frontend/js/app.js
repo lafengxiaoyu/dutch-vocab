@@ -20,6 +20,23 @@ const setupRandomWordFeature = () => {
     });
 };
 
+// 处理填空测试功能
+const setupFillInBlankFeature = () => {
+    const fillInBlankBtn = document.getElementById('fillInBlankBtn');
+    
+    // 点击填空测试按钮
+    fillInBlankBtn.addEventListener('click', async () => {
+        try {
+            const word = await getRandomWord();
+            // 在当前页面导航到填空测试页面
+            window.location.href = `fill-in-blank.html?id=${word.id}`;
+        } catch (error) {
+            console.error('获取随机单词失败:', error);
+            alert('获取随机单词失败，请稍后再试');
+        }
+    });
+};
+
 // 初始化应用
 document.addEventListener('DOMContentLoaded', () => {
     // 初始化单词表格
@@ -42,4 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 初始化随机单词功能
     setupRandomWordFeature();
+    
+    // 初始化填空测试功能
+    setupFillInBlankFeature();
 });
