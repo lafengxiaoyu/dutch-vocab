@@ -3,11 +3,101 @@ body {
     font-family: Arial, sans-serif;
     max-width: 1000px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
     line-height: 1.6;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    font-size: 16px;
+}
+
+/* iPhone优化 */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+        margin: 10px 0;
+    }
+    
+    .controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .sort-controls {
+        margin-left: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    button {
+        padding: 14px 24px;
+        min-width: 140px;
+        font-size: 16px;
+        border-radius: 8px;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 10px 0;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        width: 90%;
+        max-width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+    
+    .form-group input, 
+    .form-group select,
+    .form-group textarea {
+        padding: 14px;
+        font-size: 16px;
+        border-radius: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .pagination-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .add-word-form {
+        padding: 15px;
+        margin-top: 15px;
+    }
+    
+    /* 优化分页按钮 */
+    .pagination button {
+        padding: 10px 15px;
+        min-width: auto;
+    }
+    
+    /* 优化表格行高 */
+    th, td {
+        padding: 12px 8px;
+    }
+    
+    /* 优化操作按钮 */
+    td:last-child button {
+        margin: 4px 0;
+        padding: 8px 12px;
+    }
+    
+    /* 优化文本区域 */
+    textarea {
+        min-height: 150px;
+    }
 }
 
 h1, h2 {
@@ -31,6 +121,41 @@ th, td {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+@media screen and (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 隐藏部分列在小屏幕上 */
+    #wordsTable td:nth-child(3), 
+    #wordsTable th:nth-child(3),
+    #wordsTable td:nth-child(4),
+    #wordsTable th:nth-child(4),
+    #wordsTable td:nth-child(5),
+    #wordsTable th:nth-child(5),
+    #wordsTable td:nth-child(6),
+    #wordsTable th:nth-child(6),
+    #wordsTable td:nth-child(7),
+    #wordsTable th:nth-child(7) {
+        display: none;
+    }
+    
+    /* 调整剩余列的宽度 */
+    #wordsTable th:nth-child(1), #wordsTable td:nth-child(1) { width: 30%; }
+    #wordsTable th:nth-child(2), #wordsTable td:nth-child(2) { width: 40%; }
+    #wordsTable th:nth-child(8), #wordsTable td:nth-child(8) { width: 30%; }
+    
+    /* 操作按钮优化 */
+    td:last-child button {
+        padding: 8px 12px;
+        margin: 2px 0;
+        display: block;
+        width: 100%;
+    }
 }
 
 /* 设置各列宽度 */
@@ -295,9 +420,11 @@ textarea {
 
 /* 单词详情页面样式 */
 .word-detail-container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* 编辑模式样式 */
