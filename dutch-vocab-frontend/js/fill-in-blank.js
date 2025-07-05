@@ -72,6 +72,22 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Submit answer button not found');
     }
     
+    // 添加"暂时不会"按钮事件监听
+    const dontKnowButton = document.getElementById('dontKnowButton');
+    if (dontKnowButton) {
+        dontKnowButton.addEventListener('click', () => {
+            console.log('Don\'t know button clicked');
+            // 清空输入框，然后提交空答案
+            const answerInput = document.getElementById('answerInput');
+            if (answerInput) {
+                answerInput.value = '';
+            }
+            checkAnswer();
+        });
+    } else {
+        console.error('Don\'t know button not found');
+    }
+    
     // 添加输入框回车键事件监听
     const answerInput = document.getElementById('answerInput');
     if (answerInput) {

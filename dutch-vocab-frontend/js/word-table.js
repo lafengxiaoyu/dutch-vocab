@@ -116,7 +116,7 @@ export const renderWordsTable = (words) => {
         
         if (quizCount > 0) {
             accuracyValue = ((quizCount - incorrectCount) / quizCount * 100);
-            accuracyRate = accuracyValue.toFixed(1) + '%';
+            accuracyRate = accuracyValue.toFixed(0) + '%';
         }
         
         // 根据正确率确定颜色
@@ -134,8 +134,8 @@ export const renderWordsTable = (words) => {
         row.innerHTML = `
             <td title="${word.dutchWord || ''}"><a href="word-detail.html?id=${word.id}" class="word-link">${word.dutchWord || ''}</a></td>
             <td title="${word.englishTranslation || ''}"><a href="word-detail.html?id=${word.id}" class="word-link">${word.englishTranslation || ''}</a></td>
-            <td title="${word.quizCount || 0}">${word.quizCount || 0}</td>
             <td title="${accuracyRate}" style="color: ${accuracyColor}">${accuracyRate}</td>
+            <td title="${word.quizCount || 0}">${word.quizCount || 0}</td>
             <td><button class="delete-btn" data-id="${word.id}">删除</button></td>
         `;
 

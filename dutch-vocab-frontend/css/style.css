@@ -130,10 +130,8 @@ th, td {
         -webkit-overflow-scrolling: touch;
     }
     
-    /* 隐藏部分列在小屏幕上 */
-    #wordsTable td:nth-child(3), 
-    #wordsTable th:nth-child(3),
-    #wordsTable td:nth-child(4),
+    /* 隐藏部分列在小屏幕上，但保留正确率列 */
+    #wordsTable td:nth-child(4), 
     #wordsTable th:nth-child(4),
     #wordsTable td:nth-child(5),
     #wordsTable th:nth-child(5),
@@ -146,8 +144,9 @@ th, td {
     
     /* 调整剩余列的宽度 */
     #wordsTable th:nth-child(1), #wordsTable td:nth-child(1) { width: 30%; }
-    #wordsTable th:nth-child(2), #wordsTable td:nth-child(2) { width: 40%; }
-    #wordsTable th:nth-child(8), #wordsTable td:nth-child(8) { width: 30%; }
+    #wordsTable th:nth-child(2), #wordsTable td:nth-child(2) { width: 30%; }
+    #wordsTable th:nth-child(3), #wordsTable td:nth-child(3) { width: 20%; } /* 正确率列 */
+    #wordsTable th:nth-child(8), #wordsTable td:nth-child(8) { width: 20%; }
     
     /* 操作按钮优化 */
     td:last-child button {
