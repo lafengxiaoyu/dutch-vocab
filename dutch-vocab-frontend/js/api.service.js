@@ -5,10 +5,10 @@ const getApiBaseUrl = () => {
                         window.location.hostname === '127.0.0.1';
     
     if (isLocalhost) {
-        return 'http://localhost:8080/api/words';
+        return 'http://localhost:8080/api/words';  // 本地开发环境
     } else {
-        // 生产环境URL - 使用相对路径，这样会自动使用当前域名
-        return '/api/words';
+        // 生产环境URL - 使用Render后端
+        return 'https://dutch-vocab.onrender.com/api/words';
     }
 };
 
