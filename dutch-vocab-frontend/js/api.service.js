@@ -150,7 +150,12 @@ export const updateWord = async (id, wordData) => {
 };
 
 // 批量添加单词
-export const addWordsBulk = async (wordsData) => {
+export const addWordsBulk = async (wordsData, progressCallback = null) => {
+    // 如果提供了进度回调，先初始化进度为0
+    if (progressCallback) {
+        progressCallback(0, wordsData.length);
+    }
+    
     const response = await fetch(`${API_URL}/bulk`, {
         method: 'POST',
         headers: {
@@ -161,6 +166,11 @@ export const addWordsBulk = async (wordsData) => {
 
     if (!response.ok) {
         throw new Error(`批量添加失败! 状态码: ${response.status}`);
+    }
+
+    // 如果提供了进度回调，完成时设置进度为100%
+    if (progressCallback) {
+        progressCallback(wordsData.length, wordsData.length);
     }
 
     return response.json();

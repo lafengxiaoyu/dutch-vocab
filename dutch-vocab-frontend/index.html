@@ -48,8 +48,14 @@
     }
 ]'></textarea>
         </div>
-        <div class="controls"></div>
+        <div class="controls">
             <button id="submitBulkBtn" class="submit-btn">提交</button>
+        </div>
+        <div id="bulkProgressContainer" style="display: none; margin-top: 15px;">
+            <p>正在添加单词... <span id="bulkProgressText">0/0</span></p>
+            <div class="progress-bar-container">
+                <div id="bulkProgressBar" class="progress-bar"></div>
+            </div>
         </div>
         <div id="bulkSuccessMessage" class="success-message"></div>
         <div id="bulkErrorMessage" class="error-message"></div>

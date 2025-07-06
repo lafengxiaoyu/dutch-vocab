@@ -364,6 +364,25 @@ textarea {
     display: none;
 }
 
+/* 进度条样式 */
+.progress-bar-container {
+    width: 100%;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #4CAF50;
+    width: 0%;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+    transition: width 0.3s ease;
+}
+
 /* 分页控制样式 */
 .pagination-controls {
     margin: 20px 0;
@@ -605,4 +624,38 @@ textarea {
 .detail-item span {
     color: #2c3e50;
     font-size: 1.1em;
+}
+
+/* 批量添加摘要样式 */
+.summary-message {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #e8f7f0;
+    border-radius: 6px;
+    border-left: 4px solid #2ecc71;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.summary-message h3 {
+    color: #27ae60;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.summary-message p {
+    margin: 5px 0;
+    color: #2c3e50;
+}
+
+/* 成功消息样式增强 */
+.success-message {
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
