@@ -57,6 +57,25 @@ export function setupBulkAddForm(onSuccess) {
                 if (!word.dutchWord || !word.englishTranslation) {
                     throw new Error(`第${index + 1}个单词缺少必要字段`);
                 }
+                
+                // 处理词性字段，将 partOfSpeech 转换为 partsOfSpeech 数组
+                if (word.partOfSpeech && !word.partsOfSpeech) {
+                    // 处理复合词性（如 "adjective/adverb"）
+                    if (word.partOfSpeech.includes('/')) {
+                        const parts = word.partOfSpeech.split('/');
+                        word.partsOfSpeech = parts.map(part => part.trim().toUpperCase());
+                    } else {
+                        word.partsOfSpeech = [word.partOfSpeech.trim().toUpperCase()];
+                    }
+                    
+                    // 删除旧的 partOfSpeech 字段
+                    delete word.partOfSpeech;
+                }
+                
+                // 确保 partsOfSpeech 是数组
+                if (word.partsOfSpeech && !Array.isArray(word.partsOfSpeech)) {
+                    word.partsOfSpeech = [word.partsOfSpeech.toString().trim().toUpperCase()];
+                }
             });
             
             // 显示进度条

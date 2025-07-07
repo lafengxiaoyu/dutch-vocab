@@ -3,6 +3,7 @@ package com.dutch_vocab.dutch_vocab_app.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import java.util.Date;
+import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
@@ -24,7 +25,7 @@ public class Word {
     private Integer quizCount = 0;     // 答题次数
     private Integer incorrectCount = 0; // 答错次数
     // optional fields
-    private String partOfSpeech; // 词性: noun, verb, adjective etc.
+    private List<PartOfSpeech> partsOfSpeech; // 词性列表: NOUN, VERB, ADJECTIVE etc.
     private String exampleSentence; // example
     private Integer difficultyLevel = 1; // difficulty level 1-5
 }

@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded');
     const urlParams = new URLSearchParams(window.location.search);
     const wordId = urlParams.get('id');
+
+    // 初始化词性按钮（移到loadWordDetails中统一处理）
     
     if (wordId) {
         loadWordDetails(wordId);
@@ -125,13 +127,13 @@ async function loadWordDetails(id) {
         // 处理词性显示
         const partOfSpeechContainer = document.getElementById('partOfSpeechContainer');
         const partOfSpeechElement = document.getElementById('partOfSpeech');
-        if (word.partOfSpeech && word.partOfSpeech.trim() !== '') {
-            partOfSpeechElement.textContent = word.partOfSpeech;
+        if (word.partsOfSpeech && word.partsOfSpeech.length > 0) {
+            partOfSpeechElement.textContent = word.partsOfSpeech.join(', ');
             partOfSpeechContainer.style.display = 'block';
-            console.log('Showing part of speech:', word.partOfSpeech);
+            console.log('Showing parts of speech:', word.partsOfSpeech);
         } else {
             partOfSpeechContainer.style.display = 'none';
-            console.log('Hiding part of speech (empty)');
+            console.log('Hiding parts of speech (empty)');
         }
         
         // 处理难度显示
@@ -162,10 +164,41 @@ async function loadWordDetails(id) {
         document.getElementById('editDutchWord').value = word.dutchWord;
         document.getElementById('editEnglishTranslation').value = word.englishTranslation;
         
-        // 设置下拉选择框的值
-        if (word.partOfSpeech) {
-            document.getElementById('editPartOfSpeech').value = word.partOfSpeech;
+        // 设置词性按钮
+        if (word.partsOfSpeech && word.partsOfSpeech.length > 0) {
+            document.querySelectorAll('.pos-btn').forEach(btn => {
+                if (word.partsOfSpeech.includes(btn.dataset.value)) {
+                    btn.classList.add('current');
+                }
+            });
+            updateSelectedPartsOfSpeech();
         }
+
+        // 添加词性按钮点击事件（带详细日志）
+        const posButtons = document.querySelectorAll('.pos-btn');
+        console.log(`Found ${posButtons.length} POS buttons`);
+        
+        posButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                console.log('POS button clicked:', this.dataset.value);
+                const wasSelected = this.classList.contains('selected');
+                this.classList.toggle('selected');
+                console.log('Selection state:', !wasSelected);
+                
+                // 添加新选词性的动画效果
+                if (!wasSelected) {
+                    console.log('Adding new-selected animation');
+                    this.classList.add('new-selected');
+                    setTimeout(() => {
+                        this.classList.remove('new-selected');
+                        console.log('Removed new-selected animation');
+                    }, 500);
+                }
+                
+                const selectedValues = updateSelectedPartsOfSpeech();
+                console.log('Current selected parts of speech:', selectedValues);
+            });
+        });
         
         if (word.difficulty) {
             document.getElementById('editDifficulty').value = word.difficulty;
@@ -294,6 +327,13 @@ async function updateWordReview(wordId) {
     }
 }
 
+function updateSelectedPartsOfSpeech() {
+    const selectedButtons = document.querySelectorAll('.pos-btn.selected');
+    const selectedValues = Array.from(selectedButtons).map(btn => btn.dataset.value);
+    document.getElementById('editPartsOfSpeech').value = selectedValues.join(',');
+    return selectedValues;
+}
+
 // 保存单词更改
 async function saveWordChanges(wordId) {
     try {
@@ -302,12 +342,11 @@ async function saveWordChanges(wordId) {
         // 获取表单元素
         const editDutchWord = document.getElementById('editDutchWord');
         const editEnglishTranslation = document.getElementById('editEnglishTranslation');
-        const editPartOfSpeech = document.getElementById('editPartOfSpeech');
         const editDifficulty = document.getElementById('editDifficulty');
         const editExampleSentence = document.getElementById('editExampleSentence');
 
         // 验证必要的表单元素存在
-        if (!editDutchWord || !editEnglishTranslation || !editPartOfSpeech || !editDifficulty) {
+        if (!editDutchWord || !editEnglishTranslation || !editDifficulty) {
             throw new Error('必要的表单字段未找到');
         }
 
@@ -316,10 +355,13 @@ async function saveWordChanges(wordId) {
             throw new Error('荷兰语单词和英语翻译不能为空');
         }
 
+        // 获取选中的词性
+        const partsOfSpeech = updateSelectedPartsOfSpeech();
+        
         const wordData = {
             dutchWord: editDutchWord.value.trim(),
             englishTranslation: editEnglishTranslation.value.trim(),
-            partOfSpeech: editPartOfSpeech.value,
+            partsOfSpeech: partsOfSpeech,
             difficulty: editDifficulty.value,
             exampleSentence: editExampleSentence ? editExampleSentence.value.trim() : ''
         };

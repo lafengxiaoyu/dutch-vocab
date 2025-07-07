@@ -82,7 +82,7 @@ public class WordService {
         // 保护系统管理的字段，只允许更新用户可编辑的字段
         existingWord.setDutchWord(updatedWord.getDutchWord());
         existingWord.setEnglishTranslation(updatedWord.getEnglishTranslation());
-        existingWord.setPartOfSpeech(updatedWord.getPartOfSpeech());
+        existingWord.setPartsOfSpeech(updatedWord.getPartsOfSpeech());
         existingWord.setExampleSentence(updatedWord.getExampleSentence());
         existingWord.setDifficultyLevel(updatedWord.getDifficultyLevel());
         

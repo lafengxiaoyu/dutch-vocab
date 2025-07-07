@@ -65,17 +65,21 @@
                         <input type="text" id="editEnglishTranslation" name="englishTranslation" required>
                     </div>
                     <div class="form-group">
-                        <label for="editPartOfSpeech">词性:</label>
-                        <select id="editPartOfSpeech" name="partOfSpeech">
-                            <option value="NOUN">名词</option>
-                            <option value="VERB">动词</option>
-                            <option value="ADJECTIVE">形容词</option>
-                            <option value="ADVERB">副词</option>
-                            <option value="PREPOSITION">介词</option>
-                            <option value="CONJUNCTION">连词</option>
-                            <option value="PRONOUN">代词</option>
-                            <option value="OTHER">其他</option>
-                        </select>
+                        <label>词性:</label>
+                        <div class="part-of-speech-buttons">
+                            <button type="button" class="pos-btn" data-value="NOUN">名词</button>
+                            <button type="button" class="pos-btn" data-value="VERB">动词</button>
+                            <button type="button" class="pos-btn" data-value="ADJECTIVE">形容词</button>
+                            <button type="button" class="pos-btn" data-value="ADVERB">副词</button>
+                            <button type="button" class="pos-btn" data-value="PHRASE">短语</button>
+                            <button type="button" class="pos-btn" data-value="PREPOSITION">介词</button>
+                            <button type="button" class="pos-btn" data-value="CONJUNCTION">连词</button>
+                            <button type="button" class="pos-btn" data-value="PRONOUN">代词</button>
+                            <button type="button" class="pos-btn" data-value="INTERJECTION">感叹词</button>
+                            <button type="button" class="pos-btn" data-value="DETERMINER">限定词</button>
+                            <button type="button" class="pos-btn" data-value="ARTICLE">冠词</button>
+                        </div>
+                        <input type="hidden" id="editPartsOfSpeech" name="partsOfSpeech" value="">
                     </div>
                     <div class="form-group">
                         <label for="editDifficulty">难度:</label>
