@@ -7,9 +7,22 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        #speakExampleButton {
+            animation: pulse 2s infinite;
+        }
         #speakExampleButton:hover {
             background: #388E3C !important;
             transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        #speakExampleButton:active {
+            transform: scale(0.95);
+            background: #2E7D32 !important;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
         }
     </style>
 </head>
@@ -42,7 +55,7 @@
                     <label>示例句子:</label>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span id="exampleSentence"></span>
-                        <button id="speakExampleButton" style="background: #4CAF50; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 1em; display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+                        <button id="speakExampleButton" style="background: #4CAF50; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; min-width: 32px; min-height: 32px; max-width: 32px; max-height: 32px; cursor: pointer; font-size: 1em; display: inline-flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); padding: 0; overflow: hidden; flex-shrink: 0;">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
