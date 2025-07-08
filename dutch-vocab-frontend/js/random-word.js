@@ -12,9 +12,46 @@ const speakDutchWord = (word) => {
         return;
     }
 
+    // 停止当前正在播放的语音
+    speechSynthesis.cancel();
+
     const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = 'nl-NL'; // 设置为荷兰语
-    speechSynthesis.speak(utterance);
+    utterance.lang = 'nl-NL'; // 强制使用荷兰语
+    utterance.rate = 0.8; // 适当减慢语速
+
+    // 尝试获取荷兰语语音
+    const voices = speechSynthesis.getVoices();
+    const dutchVoice = voices.find(voice => 
+        voice.lang === 'nl-NL' || voice.lang.startsWith('nl-')
+    );
+    
+    if (dutchVoice) {
+        utterance.voice = dutchVoice;
+    } else {
+        console.warn('未找到荷兰语语音，将使用默认语音');
+        // 尝试找其他荷兰语变体
+        const fallbackVoice = voices.find(voice => 
+            voice.lang.startsWith('nl')
+        );
+        if (fallbackVoice) {
+            utterance.voice = fallbackVoice;
+        }
+    }
+
+    // 添加错误处理
+    utterance.onerror = function(event) {
+        console.error('语音合成错误:', event.error);
+        alert('发音失败: ' + event.error);
+    };
+
+    // 确保语音列表已加载
+    if (speechSynthesis.getVoices().length === 0) {
+        speechSynthesis.onvoiceschanged = function() {
+            speechSynthesis.speak(utterance);
+        };
+    } else {
+        speechSynthesis.speak(utterance);
+    }
 };
 
 // 朗读荷兰语句子
@@ -24,10 +61,52 @@ const speakDutchSentence = (sentence) => {
         return;
     }
 
+    // 停止当前正在播放的语音
+    speechSynthesis.cancel();
+
     const utterance = new SpeechSynthesisUtterance(sentence);
-    utterance.lang = 'nl-NL'; // 设置为荷兰语
-    speechSynthesis.speak(utterance);
+    utterance.lang = 'nl-NL'; // 强制使用荷兰语
+    utterance.rate = 0.8; // 适当减慢语速
+
+    // 尝试获取荷兰语语音
+    const voices = speechSynthesis.getVoices();
+    const dutchVoice = voices.find(voice => 
+        voice.lang === 'nl-NL' || voice.lang.startsWith('nl-')
+    );
+    
+    if (dutchVoice) {
+        utterance.voice = dutchVoice;
+    } else {
+        console.warn('未找到荷兰语语音，将使用默认语音');
+        // 尝试找其他荷兰语变体
+        const fallbackVoice = voices.find(voice => 
+            voice.lang.startsWith('nl')
+        );
+        if (fallbackVoice) {
+            utterance.voice = fallbackVoice;
+        }
+    }
+
+    // 添加错误处理
+    utterance.onerror = function(event) {
+        console.error('语音合成错误:', event.error);
+        alert('发音失败: ' + event.error);
+    };
+
+    // 确保语音列表已加载
+    if (speechSynthesis.getVoices().length === 0) {
+        speechSynthesis.onvoiceschanged = function() {
+            speechSynthesis.speak(utterance);
+        };
+    } else {
+        speechSynthesis.speak(utterance);
+    }
 };
+
+// 预加载语音列表
+if ('speechSynthesis' in window) {
+    speechSynthesis.getVoices(); // 触发语音列表加载
+}
 
 // 添加全局错误处理
 window.onerror = function(message, source, lineno, colno, error) {
