@@ -219,15 +219,15 @@ async function displayWordDetails(word) {
         accuracyElement.style.color = '#4caf50'; // 绿色
     }
     
-    // 处理词性显示
+    // 处理词性数组显示
     const partOfSpeechContainer = document.getElementById('partOfSpeechContainer');
     const partOfSpeechElement = document.getElementById('partOfSpeech');
-    if (word.partOfSpeech && word.partOfSpeech.trim() !== '') {
-        partOfSpeechElement.textContent = word.partOfSpeech;
-        partOfSpeechContainer.style.display = 'block';
+    if (word.partsOfSpeech && word.partsOfSpeech.length > 0) {
+        partOfSpeechElement.textContent = word.partsOfSpeech.join(', ');
     } else {
-        partOfSpeechContainer.style.display = 'none';
+        partOfSpeechElement.textContent = '未设置';
     }
+    partOfSpeechContainer.style.display = 'block';
     
     // 处理难度显示
     const difficultyContainer = document.getElementById('difficultyContainer');
