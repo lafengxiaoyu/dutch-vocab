@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>荷兰语填空测试 - Dutch Vocabulary App</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         .word-container {
             text-align: center;
@@ -118,6 +119,24 @@
         .back-btn {
             margin-bottom: 20px;
         }
+        
+        #speakButton, #speakExampleButton {
+            animation: pulse 2s infinite;
+        }
+        #speakButton:hover, #speakExampleButton:hover {
+            background: #388E3C !important;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        #speakButton:active, #speakExampleButton:active {
+            transform: scale(0.95);
+            background: #2E7D32 !important;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
     </style>
 </head>
 <body>
@@ -134,7 +153,12 @@
         
         <div id="wordDetail" style="display: none;" data-word-id="">
             <div class="word-container">
-                <div id="dutchWord" class="dutch-word"></div>
+                <div id="dutchWord" class="dutch-word" style="display: inline-flex; align-items: center; gap: 10px; min-height: 50px;">
+                    <span id="wordText" style="margin-right: 10px;"></span>
+                    <button id="speakButton" style="background: #4CAF50; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1em; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                </div>
             </div>
             
             <div class="answer-container">
@@ -159,7 +183,10 @@
                     <p><span class="label">难度:</span> <span id="difficulty"></span></p>
                 </div>
                 <div id="exampleSentenceContainer">
-                    <p><span class="label">例句:</span> <span id="exampleSentence"></span></p>
+                    <p><span class="label">例句:</span> <span id="exampleSentence"></span>
+                    <button id="speakExampleButton" style="background: #4CAF50; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1em; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px; vertical-align: middle;">
+                        <i class="fas fa-volume-up"></i>
+                    </button></p>
                 </div>
                 <p><span class="label">添加日期:</span> <span id="dateAdded"></span></p>
                 <p><span class="label">上次复习:</span> <span id="lastReviewed"></span></p>

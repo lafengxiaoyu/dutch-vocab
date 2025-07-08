@@ -1,5 +1,22 @@
 import { getWordById, updateWordReviewInfo, getRandomWord, updateWordQuizStats } from './api.service.js';
 
+// 检查浏览器是否支持语音合成
+const isSpeechSupported = () => {
+    return 'speechSynthesis' in window;
+};
+
+// 朗读荷兰语单词
+const speakDutchWord = (word) => {
+    if (!isSpeechSupported()) {
+        console.warn('您的浏览器不支持语音合成功能');
+        return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'nl-NL'; // 设置为荷兰语
+    speechSynthesis.speak(utterance);
+};
+
 // 添加全局错误处理
 window.onerror = function(message, source, lineno, colno, error) {
     console.error('JavaScript error:', message, 'at', source, lineno, colno);
@@ -9,6 +26,28 @@ window.onerror = function(message, source, lineno, colno, error) {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Fill-in-blank page loaded');
+    
+    // 添加朗读按钮事件
+    const speakButton = document.getElementById('speakButton');
+    if (speakButton) {
+        speakButton.addEventListener('click', function() {
+            const wordText = document.getElementById('wordText');
+            if (wordText && wordText.textContent) {
+                speakDutchWord(wordText.textContent);
+            }
+        });
+    }
+
+    // 添加例句朗读按钮事件
+    const speakExampleButton = document.getElementById('speakExampleButton');
+    if (speakExampleButton) {
+        speakExampleButton.addEventListener('click', function() {
+            const exampleSentence = document.getElementById('exampleSentence').textContent;
+            if (exampleSentence) {
+                speakDutchWord(exampleSentence);
+            }
+        });
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const wordId = urlParams.get('id');
     
@@ -102,25 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Answer input not found');
     }
     
-    // 荷兰语单词点击事件，用于更新复习信息
+    // 荷兰语单词容器（不再有点击事件）
     const dutchWordElement = document.getElementById('dutchWord');
     if (dutchWordElement) {
-        dutchWordElement.addEventListener('click', async () => {
-            console.log('Dutch word clicked, updating review info');
-            const currentWordId = getCurrentWordId();
-            if (currentWordId) {
-                try {
-                    await updateWordReview(currentWordId);
-                } catch (error) {
-                    console.error('更新复习信息失败:', error);
-                    document.getElementById('error').textContent = error.message;
-                    document.getElementById('error').style.display = 'block';
-                }
-            }
-        });
-        // 添加鼠标悬停样式，提示可点击
-        dutchWordElement.style.cursor = 'pointer';
-        dutchWordElement.title = '点击标记为已复习';
+        // 移除所有点击相关样式
+        dutchWordElement.style.cursor = '';
+        dutchWordElement.title = '';
     } else {
         console.error('Dutch word element not found');
     }
@@ -180,7 +206,10 @@ async function displayWordDetails(word) {
     wordDetailElement.dataset.wordId = word.id;
     
     // 更新荷兰语单词显示
-    document.getElementById('dutchWord').textContent = word.dutchWord;
+    const wordText = document.getElementById('wordText');
+    if (wordText) {
+        wordText.textContent = word.dutchWord;
+    }
     
     // 隐藏单词详情，先显示填空题
     document.getElementById('wordInfoContainer').style.display = 'none';

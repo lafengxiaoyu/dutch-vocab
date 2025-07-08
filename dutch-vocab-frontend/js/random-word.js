@@ -1,5 +1,34 @@
 import { getWordById, updateWordReviewInfo, getRandomWord, getRandomWords, updateWordQuizStats } from './api.service.js';
 
+// 检查浏览器是否支持语音合成
+const isSpeechSupported = () => {
+    return 'speechSynthesis' in window;
+};
+
+// 朗读荷兰语单词
+const speakDutchWord = (word) => {
+    if (!isSpeechSupported()) {
+        console.warn('您的浏览器不支持语音合成功能');
+        return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'nl-NL'; // 设置为荷兰语
+    speechSynthesis.speak(utterance);
+};
+
+// 朗读荷兰语句子
+const speakDutchSentence = (sentence) => {
+    if (!isSpeechSupported()) {
+        console.warn('您的浏览器不支持语音合成功能');
+        return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(sentence);
+    utterance.lang = 'nl-NL'; // 设置为荷兰语
+    speechSynthesis.speak(utterance);
+};
+
 // 添加全局错误处理
 window.onerror = function(message, source, lineno, colno, error) {
     console.error('JavaScript error:', message, 'at', source, lineno, colno);
@@ -9,6 +38,27 @@ window.onerror = function(message, source, lineno, colno, error) {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Random word page loaded');
+    
+    // 添加朗读按钮事件
+    const speakButton = document.getElementById('speakButton');
+    if (speakButton) {
+        speakButton.addEventListener('click', function() {
+            const word = document.getElementById('dutchWord').textContent;
+            if (word) {
+                speakDutchWord(word);
+            }
+        });
+    }
+
+    // 添加例句朗读按钮事件
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'speakExampleButton') {
+            const sentence = document.getElementById('exampleSentence').textContent;
+            if (sentence) {
+                speakDutchSentence(sentence);
+            }
+        }
+    });
     const urlParams = new URLSearchParams(window.location.search);
     const wordId = urlParams.get('id');
     
