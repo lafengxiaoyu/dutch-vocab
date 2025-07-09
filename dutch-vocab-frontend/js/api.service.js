@@ -239,3 +239,28 @@ export const getRandomWords = async (count = 3, excludeId = null) => {
         throw error;
     }
 };
+
+// 获取下一个单词
+export const getNextWord = async (currentId) => {
+    try {
+        // 首先获取所有单词
+        const allWords = await getWords();
+        
+        // 找到当前单词在列表中的索引
+        const currentIndex = allWords.findIndex(word => word.id === currentId);
+        
+        // 如果找不到当前单词，抛出错误
+        if (currentIndex === -1) {
+            throw new Error('找不到当前单词');
+        }
+        
+        // 计算下一个单词的索引（如果是最后一个单词，则返回第一个单词）
+        const nextIndex = (currentIndex + 1) % allWords.length;
+        
+        // 返回下一个单词
+        return allWords[nextIndex];
+    } catch (error) {
+        console.error('Get next word error:', error);
+        throw error;
+    }
+};

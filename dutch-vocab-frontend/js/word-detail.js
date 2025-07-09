@@ -1,4 +1,4 @@
-import { getWordById, updateWordReviewInfo, deleteWord, updateWord } from './api.service.js';
+import { getWordById, updateWordReviewInfo, deleteWord, updateWord, getNextWord } from './api.service.js';
 
 // 检查浏览器是否支持语音合成
 const isSpeechSupported = () => {
@@ -141,6 +141,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else {
         console.error('Back button not found');
+    }
+    
+    // 添加"下一个单词"按钮事件监听
+    const nextWordButton = document.getElementById('nextWordButton');
+    if (nextWordButton) {
+        nextWordButton.addEventListener('click', async () => {
+            console.log('Next word button clicked');
+            if (wordId) {
+                try {
+                    document.getElementById('loading').style.display = 'block';
+                    document.getElementById('wordDetail').style.display = 'none';
+                    
+                    // 获取下一个单词
+                    const nextWord = await getNextWord(wordId);
+                    console.log('Next word:', nextWord);
+                    
+                    // 跳转到下一个单词的详情页面
+                    window.location.href = `word-detail.html?id=${nextWord.id}`;
+                } catch (error) {
+                    console.error('获取下一个单词失败:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error').textContent = error.message;
+                    document.getElementById('error').style.display = 'block';
+                }
+            }
+        });
+    } else {
+        console.error('Next word button not found');
     }
     
     // 添加"标记为已复习"按钮事件监听
