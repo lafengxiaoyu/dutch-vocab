@@ -1,5 +1,4 @@
 import { fetchAndDisplayWords, initializePagination, initializeSorting } from './word-table.js';
-import { setupWordForm } from './word-form.js';
 import { setupBulkAddForm } from './word-bulk-add.js';
 import { getRandomWord } from './api.service.js';
 
@@ -51,11 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 设置刷新按钮
     document.getElementById('refreshBtn').addEventListener('click', fetchAndDisplayWords);
 
-    // 初始化添加单词表单
-    setupWordForm(fetchAndDisplayWords);
-    
     // 初始化批量添加单词功能
     setupBulkAddForm(fetchAndDisplayWords);
+    
+    // 设置添加单词页面导航按钮
+    document.getElementById('addWordPageBtn').addEventListener('click', () => {
+        window.location.href = 'add-word.html';
+    });
     
     // 初始化随机单词功能
     setupRandomWordFeature();

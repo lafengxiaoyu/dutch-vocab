@@ -15,7 +15,7 @@ const sortDirectionSelect = document.getElementById('sortDirection');
 
 // 分页和排序状态
 let currentPage = 1;
-let pageSize = parseInt(pageSizeSelect.value);
+let pageSize = pageSizeSelect ? parseInt(pageSizeSelect.value) : 20; // 默认每页显示20条
 let totalWords = 0;
 let allWords = [];
 let sortField = 'dutchWord';
@@ -185,48 +185,58 @@ export const fetchAndDisplayWords = async () => {
 // 初始化分页事件监听器
 export const initializePagination = () => {
     // 页面大小改变事件
-    pageSizeSelect.addEventListener('change', () => {
-        pageSize = parseInt(pageSizeSelect.value);
-        currentPage = 1; // 重置到第一页
-        fetchAndDisplayWords();
-    });
+    if (pageSizeSelect) {
+        pageSizeSelect.addEventListener('change', () => {
+            pageSize = parseInt(pageSizeSelect.value);
+            currentPage = 1; // 重置到第一页
+            fetchAndDisplayWords();
+        });
+    }
 
     // 上一页按钮点击事件
-    prevPageBtn.addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderWordsTable(getCurrentPageWords());
-            updatePaginationControls();
-        }
-    });
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderWordsTable(getCurrentPageWords());
+                updatePaginationControls();
+            }
+        });
+    }
 
     // 下一页按钮点击事件
-    nextPageBtn.addEventListener('click', () => {
-        if (currentPage < calculateTotalPages()) {
-            currentPage++;
-            renderWordsTable(getCurrentPageWords());
-            updatePaginationControls();
-        }
-    });
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPage < calculateTotalPages()) {
+                currentPage++;
+                renderWordsTable(getCurrentPageWords());
+                updatePaginationControls();
+            }
+        });
+    }
 };
 
 // 初始化排序事件监听器
 export const initializeSorting = () => {
     // 排序字段改变事件
-    sortFieldSelect.addEventListener('change', () => {
-        sortField = sortFieldSelect.value;
-        sortWords();
-        currentPage = 1; // 重置到第一页
-        renderWordsTable(getCurrentPageWords());
-        updatePaginationControls();
-    });
+    if (sortFieldSelect) {
+        sortFieldSelect.addEventListener('change', () => {
+            sortField = sortFieldSelect.value;
+            sortWords();
+            currentPage = 1; // 重置到第一页
+            renderWordsTable(getCurrentPageWords());
+            updatePaginationControls();
+        });
+    }
 
     // 排序方向改变事件
-    sortDirectionSelect.addEventListener('change', () => {
-        sortDirection = sortDirectionSelect.value;
-        sortWords();
-        currentPage = 1; // 重置到第一页
-        renderWordsTable(getCurrentPageWords());
-        updatePaginationControls();
-    });
+    if (sortDirectionSelect) {
+        sortDirectionSelect.addEventListener('change', () => {
+            sortDirection = sortDirectionSelect.value;
+            sortWords();
+            currentPage = 1; // 重置到第一页
+            renderWordsTable(getCurrentPageWords());
+            updatePaginationControls();
+        });
+    }
 };

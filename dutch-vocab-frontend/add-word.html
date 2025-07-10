@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffffff">
+    <title>添加荷兰语单词</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>添加荷兰语单词</h1>
+    
+    <div class="controls">
+        <button id="backToHomeBtn">返回主页</button>
+    </div>
+
+    <!-- 添加单词表单 -->
+    <div class="add-word-form">
+        <h2>添加新单词</h2>
+        <div class="form-group">
+            <label for="dutchWord">荷兰语单词:</label>
+            <input type="text" id="dutchWord" placeholder="输入荷兰语单词">
+        </div>
+        <div class="form-group">
+            <label for="englishTranslation">英语翻译:</label>
+            <input type="text" id="englishTranslation" placeholder="输入英语翻译">
+        </div>
+        <div class="form-group">
+            <label for="partsOfSpeech">词性:</label>
+            <select id="partsOfSpeech" multiple>
+                <option value="NOUN">名词 (NOUN)</option>
+                <option value="VERB">动词 (VERB)</option>
+                <option value="ADJECTIVE">形容词 (ADJECTIVE)</option>
+                <option value="ADVERB">副词 (ADVERB)</option>
+                <option value="PRONOUN">代词 (PRONOUN)</option>
+                <option value="PREPOSITION">介词 (PREPOSITION)</option>
+                <option value="CONJUNCTION">连词 (CONJUNCTION)</option>
+                <option value="INTERJECTION">感叹词 (INTERJECTION)</option>
+                <option value="PHRASE">短语 (PHRASE)</option>
+            </select>
+            <small>按住Ctrl键(Mac上为Command键)可选择多个选项</small>
+        </div>
+        <div class="form-group">
+            <label for="exampleSentence">例句:</label>
+            <textarea id="exampleSentence" placeholder="输入一个包含该单词的例句" rows="3"></textarea>
+        </div>
+        <div class="controls">
+            <button id="addWordBtn" class="submit-btn">添加单词</button>
+        </div>
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
+    </div>
+
+    <script type="module" src="js/add-word.js"></script>
+</body>
+</html>

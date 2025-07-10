@@ -15,6 +15,7 @@
 <div class="controls">
     <button id="refreshBtn">刷新数据</button>
     <button id="bulkAddBtn">批量添加</button>
+    <button id="addWordPageBtn">添加单词</button>
     <button id="randomWordBtn">随机单词</button>
     <button id="fillInBlankBtn">填空测试</button>
     
@@ -96,23 +97,6 @@
             <button id="nextPage" disabled>下一页 &gt;</button>
         </div>
     </div>
-</div>
-
-<!-- 添加单词表单放在页面底部 -->
-<div class="add-word-form">
-    <h2>添加新单词</h2>
-    <div class="form-group">
-        <label for="dutchWord">荷兰语单词:</label>
-        <input type="text" id="dutchWord" placeholder="输入荷兰语单词">
-    </div>
-    <div class="form-group">
-        <label for="englishTranslation">英语翻译:</label>
-        <input type="text" id="englishTranslation" placeholder="输入英语翻译">
-    </div>
-    <div class="controls">
-        <button id="addWordBtn" class="submit-btn">添加单词</button>
-    </div>
-    <div id="successMessage" class="success-message"></div>
 </div>
 
 <script type="module" src="js/app.js"></script>
