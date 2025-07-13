@@ -83,13 +83,7 @@ public class WordController {
         log.info("Received request to add {} words in bulk", request.getWords().size());
         return wordService.addWordsBulk(request.getWords());
     }
-    
-    /**
-     * 获取随机单词
-     * @param count 要获取的单词数量，默认为1
-     * @param excludeId 要排除的单词ID（可选）
-     * @return 随机单词或单词列表
-     */
+
     /**
      * 更新单词的答题统计信息
      * @param id 单词ID

@@ -228,15 +228,6 @@ public class WordService {
     }
 
     /**
-     * 获取指定数量的随机单词，排除指定ID的单词
-     * @param count 需要获取的单词数量
-     * @param excludeId 需要排除的单词ID
-     * @return 随机单词列表
-     * @throws NoWordsAvailableException 如果没有找到足够的单词
-     * @throws IllegalArgumentException 如果请求的数量小于1
-     * @throws RuntimeException 如果发生其他错误
-     */
-    /**
      * 计算单词的权重
      * 权重计算规则：
      * 1. 基础权重 = 1.0
@@ -320,14 +311,10 @@ public class WordService {
                     }
                 }
             }
-            
-            if (!selectedWords.isEmpty()) {
-                log.info("Successfully retrieved {} weighted random words", selectedWords.size());
-                return selectedWords;
-            }
-            
-            log.error("Failed to retrieve weighted random words");
-            throw new NoWordsAvailableException("Failed to retrieve weighted random words");
+
+            log.info("Successfully retrieved {} weighted random words", selectedWords.size());
+            return selectedWords;
+
         } catch (IllegalArgumentException e) {
             log.error("Invalid count parameter: {}", e.getMessage());
             throw e;

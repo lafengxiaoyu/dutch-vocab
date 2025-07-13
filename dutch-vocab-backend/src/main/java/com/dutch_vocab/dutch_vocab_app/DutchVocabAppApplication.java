@@ -20,7 +20,7 @@ public class DutchVocabAppApplication {
 	@Bean
 	public CommandLineRunner demo() {
 		return (args -> {
-			log.info("Application started with args: " + Arrays.toString(args));
+            log.info("Application started with args: {}", Arrays.toString(args));
 		});
 	}
 }
