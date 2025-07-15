@@ -426,6 +426,9 @@ textarea {
     display: flex;
     align-items: center;
     margin: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
 .pagination button {
@@ -445,6 +448,43 @@ textarea {
 
 #pageInfo {
     margin: 0 10px;
+}
+
+/* 跳转到特定页样式 */
+.jump-to-page {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.jump-to-page input {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 50px;
+    text-align: center;
+}
+
+.jump-to-page button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.jump-to-page button:hover {
+    background-color: #45a049;
+}
+
+@media screen and (max-width: 768px) {
+    .jump-to-page {
+        width: 100%;
+        justify-content: center;
+        margin-top: 15px;
+    }
 }
 
 /* 单词详情页面样式 */

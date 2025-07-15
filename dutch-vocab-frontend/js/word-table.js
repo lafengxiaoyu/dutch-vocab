@@ -46,6 +46,13 @@ const updatePaginationControls = () => {
     
     prevPageBtn.disabled = currentPage <= 1;
     nextPageBtn.disabled = currentPage >= totalPages;
+    
+    // 更新跳转输入框的值
+    const jumpToPageInput = document.getElementById('jumpToPage');
+    if (jumpToPageInput) {
+        jumpToPageInput.value = currentPage;
+        jumpToPageInput.max = totalPages; // 设置最大值为总页数
+    }
 };
 
 // 排序单词列表
@@ -215,6 +222,33 @@ export const initializePagination = () => {
                 currentPage++;
                 renderWordsTable(getCurrentPageWords());
                 updatePaginationControls();
+            }
+        });
+    }
+    
+    // 跳转到特定页按钮点击事件
+    const jumpToPageBtn = document.getElementById('jumpToPageBtn');
+    const jumpToPageInput = document.getElementById('jumpToPage');
+    
+    if (jumpToPageBtn && jumpToPageInput) {
+        jumpToPageBtn.addEventListener('click', () => {
+            const pageNumber = parseInt(jumpToPageInput.value);
+            const totalPages = calculateTotalPages();
+            
+            if (pageNumber >= 1 && pageNumber <= totalPages) {
+                currentPage = pageNumber;
+                renderWordsTable(getCurrentPageWords());
+                updatePaginationControls();
+            } else {
+                alert(`请输入有效的页码 (1-${totalPages})`);
+                jumpToPageInput.value = currentPage; // 重置为当前页码
+            }
+        });
+        
+        // 添加回车键支持
+        jumpToPageInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                jumpToPageBtn.click();
             }
         });
     }
