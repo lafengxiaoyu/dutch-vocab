@@ -86,6 +86,13 @@ public class WordService {
         existingWord.setExampleSentence(updatedWord.getExampleSentence());
         existingWord.setDifficultyLevel(updatedWord.getDifficultyLevel());
         
+        // 如果是Noun类型，则处理gender字段
+        if (existingWord instanceof com.dutch_vocab.dutch_vocab_app.model.Noun && 
+            updatedWord instanceof com.dutch_vocab.dutch_vocab_app.model.Noun) {
+            ((com.dutch_vocab.dutch_vocab_app.model.Noun) existingWord).setGender(
+                ((com.dutch_vocab.dutch_vocab_app.model.Noun) updatedWord).getGender());
+        }
+        
         log.info("Word {} is Updated by: {}", existingWord, updatedWord);
         return wordRepository.save(existingWord);
     }

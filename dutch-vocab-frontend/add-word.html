@@ -42,6 +42,17 @@
             </select>
             <small>按住Ctrl键(Mac上为Command键)可选择多个选项</small>
         </div>
+        
+        <!-- 名词性别选择（默认隐藏） -->
+        <div id="nounGenderGroup" class="form-group" style="display: none;">
+            <label for="nounGender">名词性别:</label>
+            <select id="nounGender">
+                <option value="">-- 请选择 --</option>
+                <option value="DE">DE (通性)</option>
+                <option value="HET">HET (中性)</option>
+            </select>
+            <small>荷兰语名词有两种性别：DE (通性) 和 HET (中性)</small>
+        </div>
         <div class="form-group">
             <label for="exampleSentence">例句:</label>
             <textarea id="exampleSentence" placeholder="输入一个包含该单词的例句" rows="3"></textarea>

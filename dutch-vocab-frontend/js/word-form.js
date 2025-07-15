@@ -6,6 +6,8 @@ const dutchWordInput = document.getElementById('dutchWord');
 const englishTranslationInput = document.getElementById('englishTranslation');
 const partsOfSpeechSelect = document.getElementById('partsOfSpeech');
 const exampleSentenceInput = document.getElementById('exampleSentence');
+const nounGenderGroup = document.getElementById('nounGenderGroup');
+const nounGenderSelect = document.getElementById('nounGender');
 const addWordBtn = document.getElementById('addWordBtn');
 const successMessage = document.getElementById('successMessage');
 
@@ -26,6 +28,26 @@ const showSuccess = (message) => {
 
 // 设置单词表单
 export const setupWordForm = (onSuccessCallback) => {
+    // 检查词性选择，显示或隐藏名词性别选择
+    const checkPartsOfSpeech = () => {
+        const selectedOptions = Array.from(partsOfSpeechSelect.selectedOptions);
+        const isNounSelected = selectedOptions.some(option => option.value === 'NOUN');
+        
+        // 如果选择了名词，显示性别选择
+        if (isNounSelected) {
+            nounGenderGroup.style.display = 'block';
+        } else {
+            nounGenderGroup.style.display = 'none';
+            nounGenderSelect.value = ''; // 重置选择
+        }
+    };
+    
+    // 添加词性选择变化事件监听
+    partsOfSpeechSelect.addEventListener('change', checkPartsOfSpeech);
+    
+    // 初始检查词性
+    checkPartsOfSpeech();
+
     // 添加单词函数
     const handleAddWord = async () => {
         const dutchWord = dutchWordInput.value.trim();
@@ -37,6 +59,10 @@ export const setupWordForm = (onSuccessCallback) => {
         
         // 获取例句
         const exampleSentence = exampleSentenceInput ? exampleSentenceInput.value.trim() : '';
+        
+        // 获取名词性别（如果适用）
+        const isNoun = partsOfSpeech.includes('NOUN');
+        const gender = isNoun ? nounGenderSelect.value : null;
 
         if (!dutchWord || !englishTranslation) {
             showError('请输入荷兰语单词和英语翻译');
@@ -47,13 +73,20 @@ export const setupWordForm = (onSuccessCallback) => {
             showError('请至少选择一个词性');
             return;
         }
+        
+        // 如果是名词但没有选择性别
+        if (isNoun && !gender) {
+            showError('请为名词选择性别（DE或HET）');
+            return;
+        }
 
         try {
             await addWord({ 
                 dutchWord, 
                 englishTranslation, 
                 partsOfSpeech, 
-                exampleSentence 
+                exampleSentence,
+                gender // 添加性别信息
             });
 
             // 清空输入框

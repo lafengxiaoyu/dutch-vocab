@@ -275,6 +275,20 @@ async function loadWordDetails(id) {
             console.log('Hiding parts of speech (empty)');
         }
         
+        // 处理名词性别显示
+        const nounGenderContainer = document.getElementById('nounGenderContainer');
+        const nounGenderElement = document.getElementById('nounGender');
+        const isNoun = word.partsOfSpeech && word.partsOfSpeech.includes('NOUN');
+        
+        if (isNoun && word.gender) {
+            nounGenderElement.textContent = word.gender;
+            nounGenderContainer.style.display = 'block';
+            console.log('Showing noun gender:', word.gender);
+        } else {
+            nounGenderContainer.style.display = 'none';
+            console.log('Hiding noun gender (not applicable or empty)');
+        }
+        
         // 处理难度显示
         const difficultyContainer = document.getElementById('difficultyContainer');
         const difficultyElement = document.getElementById('difficulty');
@@ -306,11 +320,36 @@ async function loadWordDetails(id) {
         // 设置词性按钮
         if (word.partsOfSpeech && word.partsOfSpeech.length > 0) {
             document.querySelectorAll('.pos-btn').forEach(btn => {
+                btn.classList.remove('selected', 'current'); // 先清除所有状态
                 if (word.partsOfSpeech.includes(btn.dataset.value)) {
-                    btn.classList.add('current');
+                    btn.classList.add('selected', 'current');
                 }
             });
             updateSelectedPartsOfSpeech();
+        } else {
+            // 如果没有词性数据，清除所有选择
+            document.querySelectorAll('.pos-btn').forEach(btn => {
+                btn.classList.remove('selected', 'current');
+            });
+            updateSelectedPartsOfSpeech();
+        }
+        
+        // 设置名词性别选择框
+        const editNounGenderGroup = document.getElementById('editNounGenderGroup');
+        const editNounGender = document.getElementById('editNounGender');
+        
+        if (editNounGenderGroup && editNounGender) {
+            if (word.partsOfSpeech && word.partsOfSpeech.includes('NOUN')) {
+                editNounGenderGroup.style.display = 'block';
+                editNounGender.value = word.gender || '';
+                console.log('Setting noun gender in edit form:', word.gender);
+            } else {
+                editNounGenderGroup.style.display = 'none';
+                editNounGender.value = '';
+                console.log('Hiding noun gender in edit form (not a noun)');
+            }
+        } else {
+            console.error('Noun gender form elements not found');
         }
 
         // 添加词性按钮点击事件（带详细日志）
@@ -336,6 +375,18 @@ async function loadWordDetails(id) {
                 
                 const selectedValues = updateSelectedPartsOfSpeech();
                 console.log('Current selected parts of speech:', selectedValues);
+                
+                // 处理名词性别选择框的显示/隐藏
+                const editNounGenderGroup = document.getElementById('editNounGenderGroup');
+                if (editNounGenderGroup) {
+                    if (selectedValues.includes('NOUN')) {
+                        editNounGenderGroup.style.display = 'block';
+                        console.log('Showing noun gender selection');
+                    } else {
+                        editNounGenderGroup.style.display = 'none';
+                        console.log('Hiding noun gender selection');
+                    }
+                }
             });
         });
         
@@ -377,6 +428,21 @@ function switchToEditMode() {
         viewMode.style.display = 'none';
         editMode.style.display = 'block';
         console.log('Edit mode displayed');
+        
+        // 确保词性按钮状态正确
+        const currentPartsOfSpeech = document.getElementById('editPartsOfSpeech').value.split(',');
+        document.querySelectorAll('.pos-btn').forEach(btn => {
+            btn.classList.remove('selected');
+            if (currentPartsOfSpeech.includes(btn.dataset.value)) {
+                btn.classList.add('selected');
+            }
+        });
+        
+        // 确保名词性别选择框正确显示
+        const editNounGenderGroup = document.getElementById('editNounGenderGroup');
+        if (editNounGenderGroup) {
+            editNounGenderGroup.style.display = currentPartsOfSpeech.includes('NOUN') ? 'block' : 'none';
+        }
     } else {
         console.error('View mode or edit mode elements not found');
         if (!viewMode) console.error('viewMode element not found');
@@ -497,13 +563,50 @@ async function saveWordChanges(wordId) {
         // 获取选中的词性
         const partsOfSpeech = updateSelectedPartsOfSpeech();
         
-        const wordData = {
-            dutchWord: editDutchWord.value.trim(),
-            englishTranslation: editEnglishTranslation.value.trim(),
-            partsOfSpeech: partsOfSpeech,
-            difficulty: editDifficulty.value,
-            exampleSentence: editExampleSentence ? editExampleSentence.value.trim() : ''
-        };
+        // 如果是名词，验证性别字段
+        if (partsOfSpeech.includes('NOUN')) {
+            const editNounGender = document.getElementById('editNounGender');
+            if (!editNounGender || !editNounGender.value) {
+                throw new Error('名词必须选择性别 (de 或 het)');
+            }
+            if (!['DE', 'HET'].includes(editNounGender.value)) {
+                throw new Error('性别必须是 de 或 het');
+            }
+        }
+        
+        // 获取名词性别（如果适用）
+        const editNounGender = document.getElementById('editNounGender');
+        let gender = null;
+        if (partsOfSpeech.includes('NOUN') && editNounGender && editNounGender.value) {
+            gender = editNounGender.value;
+            console.log('Saving noun gender:', gender);
+        }
+        
+        // 根据词性决定使用哪个类
+        let wordData;
+        if (partsOfSpeech.includes('NOUN')) {
+            // 如果是名词，使用Noun类
+            wordData = {
+                '@class': 'Noun', // 使用简化的类型名称
+                dutchWord: editDutchWord.value.trim(),
+                englishTranslation: editEnglishTranslation.value.trim(),
+                partsOfSpeech: partsOfSpeech,
+                difficulty: editDifficulty.value,
+                exampleSentence: editExampleSentence ? editExampleSentence.value.trim() : '',
+                gender: gender // 添加名词性别字段
+            };
+            console.log('Creating Noun instance with gender:', gender);
+        } else {
+            // 如果不是名词，使用普通Word类
+            wordData = {
+                dutchWord: editDutchWord.value.trim(),
+                englishTranslation: editEnglishTranslation.value.trim(),
+                partsOfSpeech: partsOfSpeech,
+                difficulty: editDifficulty.value,
+                exampleSentence: editExampleSentence ? editExampleSentence.value.trim() : ''
+            };
+            console.log('Creating Word instance');
+        }
 
         console.log('Prepared word data:', wordData);
 

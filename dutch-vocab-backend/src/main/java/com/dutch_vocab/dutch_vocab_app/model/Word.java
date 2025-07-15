@@ -1,6 +1,8 @@
 package com.dutch_vocab.dutch_vocab_app.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +11,10 @@ import org.springframework.data.annotation.Id;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@class")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Noun.class, name = "Noun")
+})
 public class Word {
     @Id
     private ObjectId id;

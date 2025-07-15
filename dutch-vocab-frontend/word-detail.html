@@ -48,6 +48,10 @@
                     <label>词性:</label>
                     <span id="partOfSpeech"></span>
                 </div>
+                <div id="nounGenderContainer" class="detail-item" style="display: none;">
+                    <label>名词性别:</label>
+                    <span id="nounGender"></span>
+                </div>
                 <div id="difficultyContainer" class="detail-item" style="display: none;">
                     <label>难度:</label>
                     <span id="difficulty"></span>
@@ -106,6 +110,17 @@
                             <button type="button" class="pos-btn" data-value="ARTICLE">冠词</button>
                         </div>
                         <input type="hidden" id="editPartsOfSpeech" name="partsOfSpeech" value="">
+                    </div>
+                    
+                    <!-- 名词性别选择（默认隐藏） -->
+                    <div id="editNounGenderGroup" class="form-group" style="display: none;">
+                        <label for="editNounGender">名词性别:</label>
+                        <select id="editNounGender" name="gender">
+                            <option value="">-- 请选择 --</option>
+                            <option value="DE">DE (通性)</option>
+                            <option value="HET">HET (中性)</option>
+                        </select>
+                        <small>荷兰语名词有两种性别：DE (通性) 和 HET (中性)</small>
                     </div>
                     <div class="form-group">
                         <label for="editDifficulty">难度:</label>

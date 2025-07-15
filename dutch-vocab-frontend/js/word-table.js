@@ -131,8 +131,12 @@ export const renderWordsTable = (words) => {
             }
         }
 
+        // 检查是否是名词并且有性别信息
+        const isNoun = word.partsOfSpeech && word.partsOfSpeech.includes('NOUN');
+        const genderDisplay = isNoun && word.gender ? ` (${word.gender})` : '';
+        
         row.innerHTML = `
-            <td title="${word.dutchWord || ''}"><a href="word-detail.html?id=${word.id}" class="word-link">${word.dutchWord || ''}</a></td>
+            <td title="${word.dutchWord || ''}${genderDisplay}"><a href="word-detail.html?id=${word.id}" class="word-link">${word.dutchWord || ''}${genderDisplay}</a></td>
             <td title="${word.englishTranslation || ''}"><a href="word-detail.html?id=${word.id}" class="word-link">${word.englishTranslation || ''}</a></td>
             <td title="${accuracyRate}" style="color: ${accuracyColor}">${accuracyRate}</td>
             <td title="${word.quizCount || 0}">${word.quizCount || 0}</td>
