@@ -2,6 +2,8 @@ package com.dutch_vocab.dutch_vocab_app.service;
 
 import com.dutch_vocab.dutch_vocab_app.exception.DuplicateWordException;
 import com.dutch_vocab.dutch_vocab_app.exception.NoWordsAvailableException;
+import com.dutch_vocab.dutch_vocab_app.model.Noun;
+import com.dutch_vocab.dutch_vocab_app.model.PartOfSpeech;
 import com.dutch_vocab.dutch_vocab_app.model.Word;
 import com.dutch_vocab.dutch_vocab_app.repository.WordRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,15 @@ public class WordService {
         var objectId = getObjectId(id);
         return wordRepository.findById(objectId).orElse(null);
     }
+    
+    /**
+     * 根据词性获取单词列表
+     * @param partOfSpeech 词性
+     * @return 指定词性的单词列表
+     */
+    public List<Word> getWordsByPartOfSpeech(PartOfSpeech partOfSpeech) {
+        return wordRepository.findByPartsOfSpeechContaining(partOfSpeech);
+    }
 
 
     public void deleteWord(String id) {
@@ -87,10 +98,8 @@ public class WordService {
         existingWord.setDifficultyLevel(updatedWord.getDifficultyLevel());
         
         // 如果是Noun类型，则处理gender字段
-        if (existingWord instanceof com.dutch_vocab.dutch_vocab_app.model.Noun && 
-            updatedWord instanceof com.dutch_vocab.dutch_vocab_app.model.Noun) {
-            ((com.dutch_vocab.dutch_vocab_app.model.Noun) existingWord).setGender(
-                ((com.dutch_vocab.dutch_vocab_app.model.Noun) updatedWord).getGender());
+        if (existingWord instanceof Noun && updatedWord instanceof Noun) {
+            ((Noun) existingWord).setGender(((Noun) updatedWord).getGender());
         }
         
         log.info("Word {} is Updated by: {}", existingWord, updatedWord);
@@ -280,7 +289,7 @@ public class WordService {
             }
             
             // 获取所有符合条件的单词
-            List<Word> allWords = mongoTemplate.find(query, Word.class);
+            var allWords = mongoTemplate.find(query, Word.class);
             if (allWords.isEmpty()) {
                 log.error("No words available in the database");
                 throw new NoWordsAvailableException("No words available in the database");
@@ -290,7 +299,7 @@ public class WordService {
             count = Math.min(count, allWords.size());
             
             // 计算每个单词的权重
-            List<Double> weights = new ArrayList<>();
+            var weights = new ArrayList<Double>();
             double totalWeight = 0.0;
             for (Word word : allWords) {
                 double weight = calculateWeight(word);
@@ -299,7 +308,7 @@ public class WordService {
             }
             
             // 使用权重进行随机选择
-            List<Word> selectedWords = new ArrayList<>();
+            var selectedWords = new ArrayList<Word>();
             Random random = new Random();
             
             while (selectedWords.size() < count) {

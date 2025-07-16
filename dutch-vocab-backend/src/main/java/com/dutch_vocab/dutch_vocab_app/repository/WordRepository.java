@@ -1,6 +1,7 @@
 package com.dutch_vocab.dutch_vocab_app.repository;
 
 import com.dutch_vocab.dutch_vocab_app.model.Word;
+import com.dutch_vocab.dutch_vocab_app.model.PartOfSpeech;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,6 @@ public interface WordRepository extends MongoRepository<Word, ObjectId> {
     List<Word> findAllByOrderByLastReviewedAsc();
 
     boolean existsByDutchWord(String dutchWord);
+    
+    List<Word> findByPartsOfSpeechContaining(PartOfSpeech partOfSpeech);
 }

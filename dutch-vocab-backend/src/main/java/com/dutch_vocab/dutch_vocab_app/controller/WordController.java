@@ -1,6 +1,7 @@
 package com.dutch_vocab.dutch_vocab_app.controller;
 
 import com.dutch_vocab.dutch_vocab_app.exception.NoWordsAvailableException;
+import com.dutch_vocab.dutch_vocab_app.model.PartOfSpeech;
 import com.dutch_vocab.dutch_vocab_app.model.Word;
 import com.dutch_vocab.dutch_vocab_app.service.WordService;
 import lombok.AllArgsConstructor;
@@ -116,6 +117,24 @@ public class WordController {
         } catch (NoWordsAvailableException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("message", "No words available in the database"));
+        }
+    }
+    
+    /**
+     * 根据词性获取单词
+     * @param partOfSpeech 词性
+     * @return 指定词性的单词列表
+     */
+    @GetMapping("/by-part-of-speech/{partOfSpeech}")
+    public ResponseEntity<?> getWordsByPartOfSpeech(@PathVariable String partOfSpeech) {
+        log.info("Getting words with part of speech: {}", partOfSpeech);
+        try {
+            var pos = PartOfSpeech.valueOf(partOfSpeech.toUpperCase());
+            List<Word> words = wordService.getWordsByPartOfSpeech(pos);
+            return ResponseEntity.ok(words);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("message", "Invalid part of speech: " + partOfSpeech));
         }
     }
 }
