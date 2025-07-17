@@ -109,7 +109,7 @@ public class WordController {
                 var word = wordService.getRandomWord();
                 return ResponseEntity.ok(word);
             }
-            List<Word> words = wordService.getRandomWords(count, excludeId);
+            var words = wordService.getRandomWords(count, excludeId);
             return ResponseEntity.ok(words);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -130,7 +130,7 @@ public class WordController {
         log.info("Getting words with part of speech: {}", partOfSpeech);
         try {
             var pos = PartOfSpeech.valueOf(partOfSpeech.toUpperCase());
-            List<Word> words = wordService.getWordsByPartOfSpeech(pos);
+            var words = wordService.getWordsByPartOfSpeech(pos);
             return ResponseEntity.ok(words);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

@@ -6,5 +6,6 @@ package com.dutch_vocab.dutch_vocab_app.model;
  */
 public enum NounGender {
     DE,  // 通性名词，使用"de"冠词
-    HET  // 中性名词，使用"het"冠词
+    HET,  // 中性名词，使用"het"冠词
+    UNKNOWN
 }
