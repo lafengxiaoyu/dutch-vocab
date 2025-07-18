@@ -284,7 +284,7 @@ public class WordService {
             
             // 如果有需要排除的ID，添加到查询条件中
             if (excludeId != null && !excludeId.isEmpty()) {
-                ObjectId excludeObjectId = getObjectId(excludeId);
+                var excludeObjectId = getObjectId(excludeId);
                 query.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("_id").ne(excludeObjectId));
             }
             
@@ -337,6 +337,149 @@ public class WordService {
         } catch (Exception e) {
             log.error("Error getting weighted random words: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to get weighted random words: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 获取与目标单词相同词性的随机单词
+     * @param count 需要获取的单词数量
+     * @param targetWordId 目标单词ID
+     * @return 与目标单词相同词性的随机单词列表
+     */
+    public List<Word> getRandomWordsByPartOfSpeech(int count, String targetWordId) {
+        try {
+            if (count < 1) {
+                throw new IllegalArgumentException("Count must be greater than 0");
+            }
+            
+            // 获取目标单词
+            if (targetWordId == null || targetWordId.isEmpty()) {
+                log.error("Target word ID cannot be null or empty");
+                throw new IllegalArgumentException("Target word ID cannot be null or empty");
+            }
+            
+            var targetObjectId = getObjectId(targetWordId);
+            var targetWord = wordRepository.findById(targetObjectId)
+                .orElseThrow(() -> new RuntimeException("Target word not found with id: " + targetWordId));
+            
+            // 获取目标单词的词性
+            var targetPartsOfSpeech = targetWord.getPartsOfSpeech();
+            if (targetPartsOfSpeech == null || targetPartsOfSpeech.isEmpty()) {
+                log.warn("Target word has no parts of speech defined, falling back to regular random selection");
+                return getRandomWords(count, targetWordId);
+            }
+        
+            log.info("Attempting to get {} random words with same part of speech as word ID: {}", count, targetWordId);
+            log.info("Target word parts of speech: {}", targetPartsOfSpeech);
+            
+            // 创建基础查询，排除目标单词
+            var query = new Query();
+            query.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("_id").ne(targetObjectId));
+            
+            // 获取所有符合条件的单词
+            var allWords = mongoTemplate.find(query, Word.class);
+            if (allWords.isEmpty()) {
+                log.error("No words available in the database");
+                throw new NoWordsAvailableException("No words available in the database");
+            }
+            
+            // 筛选出与目标单词具有相同词性的单词
+            var samePartOfSpeechWords = allWords.stream()
+                .filter(word -> {
+                    List<PartOfSpeech> wordPartsOfSpeech = word.getPartsOfSpeech();
+                    if (wordPartsOfSpeech == null || wordPartsOfSpeech.isEmpty()) {
+                        return false;
+                    }
+                    // 检查是否有任何词性匹配
+                    return wordPartsOfSpeech.stream()
+                        .anyMatch(targetPartsOfSpeech::contains);
+                })
+                .toList();
+            
+            // 如果没有找到相同词性的单词，回退到普通随机选择
+            if (samePartOfSpeechWords.isEmpty()) {
+                log.warn("No words with same part of speech found, falling back to regular random selection");
+                return getRandomWords(count, targetWordId);
+            }
+            
+            // 如果相同词性的单词数量不足，调整请求数量
+            int availableCount = samePartOfSpeechWords.size();
+            int adjustedCount = Math.min(count, availableCount);
+            
+            // 计算每个单词的权重
+            var weights = new ArrayList<Double>();
+            double totalWeight = 0.0;
+            for (Word word : samePartOfSpeechWords) {
+                double weight = calculateWeight(word);
+                weights.add(weight);
+                totalWeight += weight;
+            }
+            
+            // 使用权重进行随机选择
+            var selectedWords = new ArrayList<Word>();
+            Random random = new Random();
+            
+            while (selectedWords.size() < adjustedCount) {
+                double randomValue = random.nextDouble() * totalWeight;
+                double currentSum = 0.0;
+                
+                for (int i = 0; i < samePartOfSpeechWords.size(); i++) {
+                    if (selectedWords.contains(samePartOfSpeechWords.get(i))) {
+                        continue;  // 跳过已选择的单词
+                    }
+                    
+                    currentSum += weights.get(i);
+                    if (currentSum >= randomValue) {
+                        selectedWords.add(samePartOfSpeechWords.get(i));
+                        break;
+                    }
+                }
+            }
+            
+            // 如果选择的单词数量不足，从所有单词中随机选择剩余的单词
+            if (selectedWords.size() < count) {
+                log.info("Not enough words with same part of speech, adding random words to reach count");
+                
+                // 从所有单词中排除已选择的单词和目标单词
+                var remainingWords = allWords.stream()
+                    .filter(word -> !selectedWords.contains(word))
+                    .toList();
+                
+                if (!remainingWords.isEmpty()) {
+                    // 计算剩余单词的权重
+                    var remainingWeights = new ArrayList<Double>();
+                    double remainingTotalWeight = 0.0;
+                    for (Word word : remainingWords) {
+                        double weight = calculateWeight(word);
+                        remainingWeights.add(weight);
+                        remainingTotalWeight += weight;
+                    }
+                    
+                    // 随机选择剩余的单词
+                    while (selectedWords.size() < count) {
+                        double randomValue = random.nextDouble() * remainingTotalWeight;
+                        double currentSum = 0.0;
+                        
+                        for (int i = 0; i < remainingWords.size(); i++) {
+                            currentSum += remainingWeights.get(i);
+                            if (currentSum >= randomValue) {
+                                selectedWords.add(remainingWords.get(i));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            log.info("Successfully retrieved {} random words with same part of speech as target word", selectedWords.size());
+            return selectedWords;
+
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid parameter: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Error getting random words by part of speech: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to get random words by part of speech: " + e.getMessage());
         }
     }
 }

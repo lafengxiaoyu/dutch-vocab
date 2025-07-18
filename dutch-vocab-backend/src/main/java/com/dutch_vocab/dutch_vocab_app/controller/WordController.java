@@ -121,6 +121,32 @@ public class WordController {
     }
     
     /**
+     * 获取与目标单词相同词性的随机单词
+     * @param count 需要获取的单词数量
+     * @param targetWordId 目标单词ID
+     * @return 与目标单词相同词性的随机单词列表
+     */
+    @GetMapping("/random-by-part-of-speech")
+    public ResponseEntity<?> getRandomWordsByPartOfSpeech(
+            @RequestParam(defaultValue = "3") int count,
+            @RequestParam String targetWordId) {
+        log.info("Getting {} random words with same part of speech as word ID: {}", count, targetWordId);
+        try {
+            var words = wordService.getRandomWordsByPartOfSpeech(count, targetWordId);
+            return ResponseEntity.ok(words);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        } catch (NoWordsAvailableException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "No words available in the database"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Error getting random words: " + e.getMessage()));
+        }
+    }
+    
+    /**
      * 根据词性获取单词
      * @param partOfSpeech 词性
      * @return 指定词性的单词列表

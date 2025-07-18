@@ -240,6 +240,40 @@ export const getRandomWords = async (count = 3, excludeId = null) => {
     }
 };
 
+// 获取与目标单词相同词性的随机单词（用于选择题选项）
+export const getRandomWordsByPartOfSpeech = async (count = 3, targetWordId) => {
+    try {
+        if (!targetWordId) {
+            throw new Error('目标单词ID不能为空');
+        }
+        
+        // 构建查询参数
+        const params = new URLSearchParams();
+        params.append('count', count);
+        params.append('targetWordId', targetWordId);
+
+        const url = `${API_URL}/random-by-part-of-speech?${params.toString()}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            let errorMessage = `获取相同词性的随机单词失败! 状态码: ${response.status}`;
+            try {
+                const errorData = await response.json();
+                if (errorData.message) {
+                    errorMessage = errorData.message;
+                }
+            } catch (e) {
+                console.error('无法解析错误响应:', e);
+            }
+            throw new Error(errorMessage);
+        }
+        return response.json();
+    } catch (error) {
+        console.error('Get random words by part of speech error:', error);
+        throw error;
+    }
+};
+
 // 获取下一个单词
 export const getNextWord = async (currentId) => {
     try {

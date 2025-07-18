@@ -1,4 +1,4 @@
-import { getWordById, updateWordReviewInfo, getRandomWord, getRandomWords, updateWordQuizStats } from './api.service.js';
+import { getWordById, updateWordReviewInfo, getRandomWord, getRandomWords, updateWordQuizStats, getRandomWordsByPartOfSpeech } from './api.service.js';
 
 // 检查浏览器是否支持语音合成
 const isSpeechSupported = () => {
@@ -410,8 +410,24 @@ async function displayWordDetails(word) {
 // 生成选择题选项
 async function generateQuizOptions(word) {
     try {
-        // 获取3个随机单词作为干扰项
-        const randomWords = await getRandomWords(3, word.id);
+        let randomWords;
+        
+        // 检查单词是否有词性
+        if (word.partsOfSpeech && word.partsOfSpeech.length > 0) {
+            // 尝试获取相同词性的随机单词
+            try {
+                console.log('尝试获取相同词性的随机单词');
+                randomWords = await getRandomWordsByPartOfSpeech(3, word.id);
+                console.log('获取到相同词性的随机单词:', randomWords);
+            } catch (error) {
+                console.warn('获取相同词性的随机单词失败，回退到普通随机单词:', error);
+                randomWords = await getRandomWords(3, word.id);
+            }
+        } else {
+            // 如果单词没有词性，使用普通随机单词
+            console.log('单词没有词性，使用普通随机单词');
+            randomWords = await getRandomWords(3, word.id);
+        }
         
         // 创建选项数组，包含正确答案和干扰项
         const options = [
